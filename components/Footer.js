@@ -76,6 +76,17 @@ export default function Footer() {
         
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
           <p>&copy; 2025 CIR Gráfica. Todos os direitos reservados.</p>
+          <p className="mt-2 text-sm">
+            Criado por{' '}
+            <a 
+              href="https://customerhub.com.br/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-purple-400 hover:text-purple-300 transition duration-300 font-medium"
+            >
+              CustomerHub
+            </a>
+          </p>
         </div>
       </div>
     </footer>
