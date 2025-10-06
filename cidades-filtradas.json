@@ -1,0 +1,1196 @@
+[
+  {
+    "cidade": "Goiânia",
+    "estado": "GO",
+    "latitude": -16.6864,
+    "longitude": -49.2653
+  },
+  {
+    "cidade": "Anápolis",
+    "estado": "GO",
+    "latitude": -16.3286,
+    "longitude": -48.9534
+  },
+  {
+    "cidade": "Aparecida de Goiânia",
+    "estado": "GO",
+    "latitude": -16.8198,
+    "longitude": -49.2469
+  },
+  {
+    "cidade": "Luziânia",
+    "estado": "GO",
+    "latitude": -16.2525,
+    "longitude": -47.9503
+  },
+  {
+    "cidade": "Rio Verde",
+    "estado": "GO",
+    "latitude": -17.7979,
+    "longitude": -50.9176
+  },
+  {
+    "cidade": "Catalão",
+    "estado": "GO",
+    "latitude": -18.1703,
+    "longitude": -47.9419
+  },
+  {
+    "cidade": "Itumbiara",
+    "estado": "GO",
+    "latitude": -18.4173,
+    "longitude": -49.2156
+  },
+  {
+    "cidade": "Jataí",
+    "estado": "GO",
+    "latitude": -17.8833,
+    "longitude": -51.7167
+  },
+  {
+    "cidade": "Senador Canedo",
+    "estado": "GO",
+    "latitude": -16.7083,
+    "longitude": -49.0933
+  },
+  {
+    "cidade": "Trindade",
+    "estado": "GO",
+    "latitude": -16.6497,
+    "longitude": -49.4889
+  },
+  {
+    "cidade": "Brasília",
+    "estado": "DF",
+    "latitude": -15.7942,
+    "longitude": -47.8822
+  },
+  {
+    "cidade": "Taguatinga",
+    "estado": "DF",
+    "latitude": -15.8329,
+    "longitude": -48.0536
+  },
+  {
+    "cidade": "Ceilândia",
+    "estado": "DF",
+    "latitude": -15.8144,
+    "longitude": -48.1039
+  },
+  {
+    "cidade": "Samambaia",
+    "estado": "DF",
+    "latitude": -15.8744,
+    "longitude": -48.0889
+  },
+  {
+    "cidade": "Plano Piloto",
+    "estado": "DF",
+    "latitude": -15.7942,
+    "longitude": -47.8822
+  },
+  {
+    "cidade": "Uberlândia",
+    "estado": "MG",
+    "latitude": -18.9147,
+    "longitude": -48.2772
+  },
+  {
+    "cidade": "Uberaba",
+    "estado": "MG",
+    "latitude": -19.7478,
+    "longitude": -47.9319
+  },
+  {
+    "cidade": "Araguari",
+    "estado": "MG",
+    "latitude": -18.6489,
+    "longitude": -48.1872
+  },
+  {
+    "cidade": "Ituiutaba",
+    "estado": "MG",
+    "latitude": -18.9747,
+    "longitude": -49.4628
+  },
+  {
+    "cidade": "Patos de Minas",
+    "estado": "MG",
+    "latitude": -18.5778,
+    "longitude": -46.5189
+  },
+  {
+    "cidade": "Uberlândia",
+    "estado": "MG",
+    "latitude": -18.9147,
+    "longitude": -48.2772
+  },
+  {
+    "cidade": "Araxá",
+    "estado": "MG",
+    "latitude": -19.5933,
+    "longitude": -46.9406
+  },
+  {
+    "cidade": "Barretos",
+    "estado": "SP",
+    "latitude": -20.5569,
+    "longitude": -48.5678
+  },
+  {
+    "cidade": "Franca",
+    "estado": "SP",
+    "latitude": -20.5389,
+    "longitude": -47.4019
+  },
+  {
+    "cidade": "Ribeirão Preto",
+    "estado": "SP",
+    "latitude": -21.1767,
+    "longitude": -47.8208
+  },
+  {
+    "cidade": "São José do Rio Preto",
+    "estado": "SP",
+    "latitude": -20.8119,
+    "longitude": -49.3761
+  },
+  {
+    "cidade": "Bauru",
+    "estado": "SP",
+    "latitude": -22.3147,
+    "longitude": -49.0606
+  },
+  {
+    "cidade": "Araraquara",
+    "estado": "SP",
+    "latitude": -21.7944,
+    "longitude": -48.1756
+  },
+  {
+    "cidade": "Campinas",
+    "estado": "SP",
+    "latitude": -22.9068,
+    "longitude": -47.0608
+  },
+  {
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "latitude": -23.5505,
+    "longitude": -46.6333
+  },
+  {
+    "cidade": "Santos",
+    "estado": "SP",
+    "latitude": -23.9608,
+    "longitude": -46.3339
+  },
+  {
+    "cidade": "Sorocaba",
+    "estado": "SP",
+    "latitude": -23.5019,
+    "longitude": -47.4581
+  },
+  {
+    "cidade": "São José dos Campos",
+    "estado": "SP",
+    "latitude": -23.1861,
+    "longitude": -45.8869
+  },
+  {
+    "cidade": "Taubaté",
+    "estado": "SP",
+    "latitude": -23.0269,
+    "longitude": -45.5556
+  },
+  {
+    "cidade": "Guarulhos",
+    "estado": "SP",
+    "latitude": -23.4544,
+    "longitude": -46.5339
+  },
+  {
+    "cidade": "Osasco",
+    "estado": "SP",
+    "latitude": -23.5320,
+    "longitude": -46.7920
+  },
+  {
+    "cidade": "Santo André",
+    "estado": "SP",
+    "latitude": -23.6639,
+    "longitude": -46.5383
+  },
+  {
+    "cidade": "São Bernardo do Campo",
+    "estado": "SP",
+    "latitude": -23.6944,
+    "longitude": -46.5653
+  },
+  {
+    "cidade": "Diadema",
+    "estado": "SP",
+    "latitude": -23.6861,
+    "longitude": -46.6228
+  },
+  {
+    "cidade": "Mauá",
+    "estado": "SP",
+    "latitude": -23.6689,
+    "longitude": -46.4614
+  },
+  {
+    "cidade": "Carapicuíba",
+    "estado": "SP",
+    "latitude": -23.5233,
+    "longitude": -46.8406
+  },
+  {
+    "cidade": "Itaquaquecetuba",
+    "estado": "SP",
+    "latitude": -23.4864,
+    "longitude": -46.3486
+  },
+  {
+    "cidade": "Ferraz de Vasconcelos",
+    "estado": "SP",
+    "latitude": -23.5411,
+    "longitude": -46.3689
+  },
+  {
+    "cidade": "Poá",
+    "estado": "SP",
+    "latitude": -23.5283,
+    "longitude": -46.3456
+  },
+  {
+    "cidade": "Suzano",
+    "estado": "SP",
+    "latitude": -23.5447,
+    "longitude": -46.3111
+  },
+  {
+    "cidade": "Mogi das Cruzes",
+    "estado": "SP",
+    "latitude": -23.5228,
+    "longitude": -46.1881
+  },
+  {
+    "cidade": "Itaquaquecetuba",
+    "estado": "SP",
+    "latitude": -23.4864,
+    "longitude": -46.3486
+  },
+  {
+    "cidade": "Cotia",
+    "estado": "SP",
+    "latitude": -23.6039,
+    "longitude": -46.9192
+  },
+  {
+    "cidade": "Embu das Artes",
+    "estado": "SP",
+    "latitude": -23.6489,
+    "longitude": -46.8522
+  },
+  {
+    "cidade": "Taboão da Serra",
+    "estado": "SP",
+    "latitude": -23.6261,
+    "longitude": -46.7917
+  },
+  {
+    "cidade": "Itapecerica da Serra",
+    "estado": "SP",
+    "latitude": -23.7169,
+    "longitude": -46.8492
+  },
+  {
+    "cidade": "São Roque",
+    "estado": "SP",
+    "latitude": -23.5292,
+    "longitude": -47.1353
+  },
+  {
+    "cidade": "Araçariguama",
+    "estado": "SP",
+    "latitude": -23.4367,
+    "longitude": -47.0614
+  },
+  {
+    "cidade": "Piedade",
+    "estado": "SP",
+    "latitude": -23.7139,
+    "longitude": -47.4278
+  },
+  {
+    "cidade": "Votorantim",
+    "estado": "SP",
+    "latitude": -23.5467,
+    "longitude": -47.4378
+  },
+  {
+    "cidade": "Salto",
+    "estado": "SP",
+    "latitude": -23.1997,
+    "longitude": -47.2869
+  },
+  {
+    "cidade": "Itu",
+    "estado": "SP",
+    "latitude": -23.2644,
+    "longitude": -47.2992
+  },
+  {
+    "cidade": "Indaiatuba",
+    "estado": "SP",
+    "latitude": -23.0889,
+    "longitude": -47.2119
+  },
+  {
+    "cidade": "Hortolândia",
+    "estado": "SP",
+    "latitude": -22.8583,
+    "longitude": -47.2200
+  },
+  {
+    "cidade": "Sumaré",
+    "estado": "SP",
+    "latitude": -22.8219,
+    "longitude": -47.2669
+  },
+  {
+    "cidade": "Nova Odessa",
+    "estado": "SP",
+    "latitude": -22.7833,
+    "longitude": -47.2944
+  },
+  {
+    "cidade": "Americana",
+    "estado": "SP",
+    "latitude": -22.7389,
+    "longitude": -47.3311
+  },
+  {
+    "cidade": "Santa Bárbara d'Oeste",
+    "estado": "SP",
+    "latitude": -22.7544,
+    "longitude": -47.4139
+  },
+  {
+    "cidade": "Piracicaba",
+    "estado": "SP",
+    "latitude": -22.7253,
+    "longitude": -47.6492
+  },
+  {
+    "cidade": "Limeira",
+    "estado": "SP",
+    "latitude": -22.5647,
+    "longitude": -47.4017
+  },
+  {
+    "cidade": "Rio Claro",
+    "estado": "SP",
+    "latitude": -22.4106,
+    "longitude": -47.5608
+  },
+  {
+    "cidade": "São Carlos",
+    "estado": "SP",
+    "latitude": -22.0178,
+    "longitude": -47.8908
+  },
+  {
+    "cidade": "Ribeirão Preto",
+    "estado": "SP",
+    "latitude": -21.1767,
+    "longitude": -47.8208
+  },
+  {
+    "cidade": "Sertãozinho",
+    "estado": "SP",
+    "latitude": -21.1378,
+    "longitude": -47.9903
+  },
+  {
+    "cidade": "Jaboticabal",
+    "estado": "SP",
+    "latitude": -21.2547,
+    "longitude": -48.3222
+  },
+  {
+    "cidade": "Taquaritinga",
+    "estado": "SP",
+    "latitude": -21.4053,
+    "longitude": -48.5042
+  },
+  {
+    "cidade": "Catanduva",
+    "estado": "SP",
+    "latitude": -21.1378,
+    "longitude": -48.9728
+  },
+  {
+    "cidade": "São José do Rio Preto",
+    "estado": "SP",
+    "latitude": -20.8119,
+    "longitude": -49.3761
+  },
+  {
+    "cidade": "Votuporanga",
+    "estado": "SP",
+    "latitude": -20.4233,
+    "longitude": -49.9728
+  },
+  {
+    "cidade": "Fernandópolis",
+    "estado": "SP",
+    "latitude": -20.2839,
+    "longitude": -50.2467
+  },
+  {
+    "cidade": "Jales",
+    "estado": "SP",
+    "latitude": -20.2689,
+    "longitude": -50.5458
+  },
+  {
+    "cidade": "Auriflama",
+    "estado": "SP",
+    "latitude": -20.6867,
+    "longitude": -50.5547
+  },
+  {
+    "cidade": "General Salgado",
+    "estado": "SP",
+    "latitude": -20.6489,
+    "longitude": -50.3639
+  },
+  {
+    "cidade": "Nhandeara",
+    "estado": "SP",
+    "latitude": -20.6947,
+    "longitude": -50.0439
+  },
+  {
+    "cidade": "Monte Aprazível",
+    "estado": "SP",
+    "latitude": -20.7697,
+    "longitude": -49.7147
+  },
+  {
+    "cidade": "Nova Granada",
+    "estado": "SP",
+    "latitude": -20.5339,
+    "longitude": -49.3147
+  },
+  {
+    "cidade": "Mirassol",
+    "estado": "SP",
+    "latitude": -20.8169,
+    "longitude": -49.5208
+  },
+  {
+    "cidade": "Bady Bassitt",
+    "estado": "SP",
+    "latitude": -20.9197,
+    "longitude": -49.4453
+  },
+  {
+    "cidade": "Nova Aliança",
+    "estado": "SP",
+    "latitude": -21.0169,
+    "longitude": -49.4989
+  },
+  {
+    "cidade": "Bebedouro",
+    "estado": "SP",
+    "latitude": -20.9497,
+    "longitude": -48.4792
+  },
+  {
+    "cidade": "Barretos",
+    "estado": "SP",
+    "latitude": -20.5569,
+    "longitude": -48.5678
+  },
+  {
+    "cidade": "Colina",
+    "estado": "SP",
+    "latitude": -20.7169,
+    "longitude": -48.5389
+  },
+  {
+    "cidade": "Jaborandi",
+    "estado": "SP",
+    "latitude": -20.6889,
+    "longitude": -48.4119
+  },
+  {
+    "cidade": "Olímpia",
+    "estado": "SP",
+    "latitude": -20.7369,
+    "longitude": -48.9147
+  },
+  {
+    "cidade": "Guapiaçu",
+    "estado": "SP",
+    "latitude": -20.7947,
+    "longitude": -49.2178
+  },
+  {
+    "cidade": "Cedral",
+    "estado": "SP",
+    "latitude": -20.9008,
+    "longitude": -49.2669
+  },
+  {
+    "cidade": "Gastão Vidigal",
+    "estado": "SP",
+    "latitude": -20.8008,
+    "longitude": -50.1869
+  },
+  {
+    "cidade": "Magda",
+    "estado": "SP",
+    "latitude": -20.6447,
+    "longitude": -50.2306
+  },
+  {
+    "cidade": "Nova Castilho",
+    "estado": "SP",
+    "latitude": -20.7619,
+    "longitude": -50.3478
+  },
+  {
+    "cidade": "Monções",
+    "estado": "SP",
+    "latitude": -20.8508,
+    "longitude": -50.0978
+  },
+  {
+    "cidade": "Sebastianópolis do Sul",
+    "estado": "SP",
+    "latitude": -20.6558,
+    "longitude": -49.9247
+  },
+  {
+    "cidade": "União Paulista",
+    "estado": "SP",
+    "latitude": -20.8869,
+    "longitude": -49.9028
+  },
+  {
+    "cidade": "Nova Luzitânia",
+    "estado": "SP",
+    "latitude": -20.8569,
+    "longitude": -50.2619
+  },
+  {
+    "cidade": "São João de Iracema",
+    "estado": "SP",
+    "latitude": -20.5119,
+    "longitude": -50.3528
+  },
+  {
+    "cidade": "Nova Canaã Paulista",
+    "estado": "SP",
+    "latitude": -20.3839,
+    "longitude": -50.9489
+  },
+  {
+    "cidade": "Palestina",
+    "estado": "SP",
+    "latitude": -20.3908,
+    "longitude": -49.4319
+  },
+  {
+    "cidade": "Cosmorama",
+    "estado": "SP",
+    "latitude": -20.4758,
+    "longitude": -49.7828
+  },
+  {
+    "cidade": "Vista Alegre do Alto",
+    "estado": "SP",
+    "latitude": -21.1697,
+    "longitude": -48.6289
+  },
+  {
+    "cidade": "Cândido Rodrigues",
+    "estado": "SP",
+    "latitude": -21.3278,
+    "longitude": -48.6328
+  },
+  {
+    "cidade": "Santa Adélia",
+    "estado": "SP",
+    "latitude": -21.2428,
+    "longitude": -48.8058
+  },
+  {
+    "cidade": "Ariranha",
+    "estado": "SP",
+    "latitude": -21.1878,
+    "longitude": -48.7869
+  },
+  {
+    "cidade": "Palmares Paulista",
+    "estado": "SP",
+    "latitude": -21.0858,
+    "longitude": -48.8039
+  },
+  {
+    "cidade": "Planalto",
+    "estado": "SP",
+    "latitude": -21.0347,
+    "longitude": -49.9289
+  },
+  {
+    "cidade": "Urupês",
+    "estado": "SP",
+    "latitude": -21.2039,
+    "longitude": -49.2939
+  },
+  {
+    "cidade": "Potirendaba",
+    "estado": "SP",
+    "latitude": -21.0428,
+    "longitude": -49.3808
+  },
+  {
+    "cidade": "Elisiário",
+    "estado": "SP",
+    "latitude": -21.1678,
+    "longitude": -49.1147
+  },
+  {
+    "cidade": "Marapoama",
+    "estado": "SP",
+    "latitude": -21.2589,
+    "longitude": -49.1308
+  },
+  {
+    "cidade": "Novais",
+    "estado": "SP",
+    "latitude": -20.9897,
+    "longitude": -48.9147
+  },
+  {
+    "cidade": "Catiguá",
+    "estado": "SP",
+    "latitude": -21.0497,
+    "longitude": -49.0628
+  },
+  {
+    "cidade": "Ibirá",
+    "estado": "SP",
+    "latitude": -21.0839,
+    "longitude": -49.2408
+  },
+  {
+    "cidade": "Uchoa",
+    "estado": "SP",
+    "latitude": -20.9519,
+    "longitude": -49.1719
+  },
+  {
+    "cidade": "Zacarias",
+    "estado": "SP",
+    "latitude": -21.0508,
+    "longitude": -50.0558
+  },
+  {
+    "cidade": "Orindiúva",
+    "estado": "SP",
+    "latitude": -20.1869,
+    "longitude": -49.3469
+  },
+  {
+    "cidade": "Itajobi",
+    "estado": "SP",
+    "latitude": -21.3189,
+    "longitude": -49.0547
+  },
+  {
+    "cidade": "Marapoama",
+    "estado": "SP",
+    "latitude": -21.2589,
+    "longitude": -49.1308
+  },
+  {
+    "cidade": "Adolfo",
+    "estado": "SP",
+    "latitude": -21.2328,
+    "longitude": -49.6458
+  },
+  {
+    "cidade": "Mendonça",
+    "estado": "SP",
+    "latitude": -21.1758,
+    "longitude": -49.5808
+  },
+  {
+    "cidade": "Nova Aliança",
+    "estado": "SP",
+    "latitude": -21.0169,
+    "longitude": -49.4989
+  },
+  {
+    "cidade": "Bady Bassitt",
+    "estado": "SP",
+    "latitude": -20.9197,
+    "longitude": -49.4453
+  },
+  {
+    "cidade": "Mirassol",
+    "estado": "SP",
+    "latitude": -20.8169,
+    "longitude": -49.5208
+  },
+  {
+    "cidade": "Nova Granada",
+    "estado": "SP",
+    "latitude": -20.5339,
+    "longitude": -49.3147
+  },
+  {
+    "cidade": "Monte Aprazível",
+    "estado": "SP",
+    "latitude": -20.7697,
+    "longitude": -49.7147
+  },
+  {
+    "cidade": "Nhandeara",
+    "estado": "SP",
+    "latitude": -20.6947,
+    "longitude": -50.0439
+  },
+  {
+    "cidade": "General Salgado",
+    "estado": "SP",
+    "latitude": -20.6489,
+    "longitude": -50.3639
+  },
+  {
+    "cidade": "Auriflama",
+    "estado": "SP",
+    "latitude": -20.6867,
+    "longitude": -50.5547
+  },
+  {
+    "cidade": "Jales",
+    "estado": "SP",
+    "latitude": -20.2689,
+    "longitude": -50.5458
+  },
+  {
+    "cidade": "Fernandópolis",
+    "estado": "SP",
+    "latitude": -20.2839,
+    "longitude": -50.2467
+  },
+  {
+    "cidade": "Votuporanga",
+    "estado": "SP",
+    "latitude": -20.4233,
+    "longitude": -49.9728
+  },
+  {
+    "cidade": "Catanduva",
+    "estado": "SP",
+    "latitude": -21.1378,
+    "longitude": -48.9728
+  },
+  {
+    "cidade": "Taquaritinga",
+    "estado": "SP",
+    "latitude": -21.4053,
+    "longitude": -48.5042
+  },
+  {
+    "cidade": "Jaboticabal",
+    "estado": "SP",
+    "latitude": -21.2547,
+    "longitude": -48.3222
+  },
+  {
+    "cidade": "Sertãozinho",
+    "estado": "SP",
+    "latitude": -21.1378,
+    "longitude": -47.9903
+  },
+  {
+    "cidade": "Ribeirão Preto",
+    "estado": "SP",
+    "latitude": -21.1767,
+    "longitude": -47.8208
+  },
+  {
+    "cidade": "São Carlos",
+    "estado": "SP",
+    "latitude": -22.0178,
+    "longitude": -47.8908
+  },
+  {
+    "cidade": "Rio Claro",
+    "estado": "SP",
+    "latitude": -22.4106,
+    "longitude": -47.5608
+  },
+  {
+    "cidade": "Limeira",
+    "estado": "SP",
+    "latitude": -22.5647,
+    "longitude": -47.4017
+  },
+  {
+    "cidade": "Piracicaba",
+    "estado": "SP",
+    "latitude": -22.7253,
+    "longitude": -47.6492
+  },
+  {
+    "cidade": "Santa Bárbara d'Oeste",
+    "estado": "SP",
+    "latitude": -22.7544,
+    "longitude": -47.4139
+  },
+  {
+    "cidade": "Americana",
+    "estado": "SP",
+    "latitude": -22.7389,
+    "longitude": -47.3311
+  },
+  {
+    "cidade": "Nova Odessa",
+    "estado": "SP",
+    "latitude": -22.7833,
+    "longitude": -47.2944
+  },
+  {
+    "cidade": "Sumaré",
+    "estado": "SP",
+    "latitude": -22.8219,
+    "longitude": -47.2669
+  },
+  {
+    "cidade": "Hortolândia",
+    "estado": "SP",
+    "latitude": -22.8583,
+    "longitude": -47.2200
+  },
+  {
+    "cidade": "Indaiatuba",
+    "estado": "SP",
+    "latitude": -23.0889,
+    "longitude": -47.2119
+  },
+  {
+    "cidade": "Itu",
+    "estado": "SP",
+    "latitude": -23.2644,
+    "longitude": -47.2992
+  },
+  {
+    "cidade": "Salto",
+    "estado": "SP",
+    "latitude": -23.1997,
+    "longitude": -47.2869
+  },
+  {
+    "cidade": "Votorantim",
+    "estado": "SP",
+    "latitude": -23.5467,
+    "longitude": -47.4378
+  },
+  {
+    "cidade": "Piedade",
+    "estado": "SP",
+    "latitude": -23.7139,
+    "longitude": -47.4278
+  },
+  {
+    "cidade": "Araçariguama",
+    "estado": "SP",
+    "latitude": -23.4367,
+    "longitude": -47.0614
+  },
+  {
+    "cidade": "São Roque",
+    "estado": "SP",
+    "latitude": -23.5292,
+    "longitude": -47.1353
+  },
+  {
+    "cidade": "Itapecerica da Serra",
+    "estado": "SP",
+    "latitude": -23.7169,
+    "longitude": -46.8492
+  },
+  {
+    "cidade": "Taboão da Serra",
+    "estado": "SP",
+    "latitude": -23.6261,
+    "longitude": -46.7917
+  },
+  {
+    "cidade": "Embu das Artes",
+    "estado": "SP",
+    "latitude": -23.6489,
+    "longitude": -46.8522
+  },
+  {
+    "cidade": "Cotia",
+    "estado": "SP",
+    "latitude": -23.6039,
+    "longitude": -46.9192
+  },
+  {
+    "cidade": "Mogi das Cruzes",
+    "estado": "SP",
+    "latitude": -23.5228,
+    "longitude": -46.1881
+  },
+  {
+    "cidade": "Suzano",
+    "estado": "SP",
+    "latitude": -23.5447,
+    "longitude": -46.3111
+  },
+  {
+    "cidade": "Poá",
+    "estado": "SP",
+    "latitude": -23.5283,
+    "longitude": -46.3456
+  },
+  {
+    "cidade": "Ferraz de Vasconcelos",
+    "estado": "SP",
+    "latitude": -23.5411,
+    "longitude": -46.3689
+  },
+  {
+    "cidade": "Itaquaquecetuba",
+    "estado": "SP",
+    "latitude": -23.4864,
+    "longitude": -46.3486
+  },
+  {
+    "cidade": "Carapicuíba",
+    "estado": "SP",
+    "latitude": -23.5233,
+    "longitude": -46.8406
+  },
+  {
+    "cidade": "Mauá",
+    "estado": "SP",
+    "latitude": -23.6689,
+    "longitude": -46.4614
+  },
+  {
+    "cidade": "São Bernardo do Campo",
+    "estado": "SP",
+    "latitude": -23.6944,
+    "longitude": -46.5653
+  },
+  {
+    "cidade": "Santo André",
+    "estado": "SP",
+    "latitude": -23.6639,
+    "longitude": -46.5383
+  },
+  {
+    "cidade": "Osasco",
+    "estado": "SP",
+    "latitude": -23.5320,
+    "longitude": -46.7920
+  },
+  {
+    "cidade": "Guarulhos",
+    "estado": "SP",
+    "latitude": -23.4544,
+    "longitude": -46.5339
+  },
+  {
+    "cidade": "Taubaté",
+    "estado": "SP",
+    "latitude": -23.0269,
+    "longitude": -45.5556
+  },
+  {
+    "cidade": "São José dos Campos",
+    "estado": "SP",
+    "latitude": -23.1861,
+    "longitude": -45.8869
+  },
+  {
+    "cidade": "Sorocaba",
+    "estado": "SP",
+    "latitude": -23.5019,
+    "longitude": -47.4581
+  },
+  {
+    "cidade": "Santos",
+    "estado": "SP",
+    "latitude": -23.9608,
+    "longitude": -46.3339
+  },
+  {
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "latitude": -23.5505,
+    "longitude": -46.6333
+  },
+  {
+    "cidade": "Campinas",
+    "estado": "SP",
+    "latitude": -22.9068,
+    "longitude": -47.0608
+  },
+  {
+    "cidade": "Araraquara",
+    "estado": "SP",
+    "latitude": -22.9068,
+    "longitude": -47.0608
+  },
+  {
+    "cidade": "Bauru",
+    "estado": "SP",
+    "latitude": -22.3147,
+    "longitude": -49.0606
+  },
+  {
+    "cidade": "Franca",
+    "estado": "SP",
+    "latitude": -20.5389,
+    "longitude": -47.4019
+  },
+  {
+    "cidade": "Barretos",
+    "estado": "SP",
+    "latitude": -20.5569,
+    "longitude": -48.5678
+  },
+  {
+    "cidade": "Araxá",
+    "estado": "MG",
+    "latitude": -19.5933,
+    "longitude": -46.9406
+  },
+  {
+    "cidade": "Patos de Minas",
+    "estado": "MG",
+    "latitude": -18.5778,
+    "longitude": -46.5189
+  },
+  {
+    "cidade": "Ituiutaba",
+    "estado": "MG",
+    "latitude": -18.9747,
+    "longitude": -49.4628
+  },
+  {
+    "cidade": "Araguari",
+    "estado": "MG",
+    "latitude": -18.6489,
+    "longitude": -48.1872
+  },
+  {
+    "cidade": "Uberaba",
+    "estado": "MG",
+    "latitude": -19.7478,
+    "longitude": -47.9319
+  },
+  {
+    "cidade": "Uberlândia",
+    "estado": "MG",
+    "latitude": -18.9147,
+    "longitude": -48.2772
+  },
+  {
+    "cidade": "Plano Piloto",
+    "estado": "DF",
+    "latitude": -15.7942,
+    "longitude": -47.8822
+  },
+  {
+    "cidade": "Samambaia",
+    "estado": "DF",
+    "latitude": -15.8744,
+    "longitude": -48.0889
+  },
+  {
+    "cidade": "Ceilândia",
+    "estado": "DF",
+    "latitude": -15.8144,
+    "longitude": -48.1039
+  },
+  {
+    "cidade": "Taguatinga",
+    "estado": "DF",
+    "latitude": -15.8329,
+    "longitude": -48.0536
+  },
+  {
+    "cidade": "Brasília",
+    "estado": "DF",
+    "latitude": -15.7942,
+    "longitude": -47.8822
+  },
+  {
+    "cidade": "Trindade",
+    "estado": "GO",
+    "latitude": -16.6497,
+    "longitude": -49.4889
+  },
+  {
+    "cidade": "Senador Canedo",
+    "estado": "GO",
+    "latitude": -16.7083,
+    "longitude": -49.0933
+  },
+  {
+    "cidade": "Jataí",
+    "estado": "GO",
+    "latitude": -17.8833,
+    "longitude": -51.7167
+  },
+  {
+    "cidade": "Itumbiara",
+    "estado": "GO",
+    "latitude": -18.4173,
+    "longitude": -49.2156
+  },
+  {
+    "cidade": "Catalão",
+    "estado": "GO",
+    "latitude": -18.1703,
+    "longitude": -47.9419
+  },
+  {
+    "cidade": "Rio Verde",
+    "estado": "GO",
+    "latitude": -17.7979,
+    "longitude": -50.9176
+  },
+  {
+    "cidade": "Luziânia",
+    "estado": "GO",
+    "latitude": -16.2525,
+    "longitude": -47.9503
+  },
+  {
+    "cidade": "Aparecida de Goiânia",
+    "estado": "GO",
+    "latitude": -16.8198,
+    "longitude": -49.2469
+  },
+  {
+    "cidade": "Anápolis",
+    "estado": "GO",
+    "latitude": -16.3286,
+    "longitude": -48.9534
+  }
+] 

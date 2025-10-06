@@ -2,7 +2,8 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 import ImageCarousel from '../components/ImageCarousel'
 import Favicon from '../components/Favicon'
-import cidades from '../cidades.json'
+
+import cidades from '../cidades-filtradas.json'
 import { normalizeText } from '../utils/normalize'
 import { galleryImages } from '../data/gallery'
 import Head from 'next/head'
@@ -26,26 +27,26 @@ export default function Home() {
   return (
     <div>
       <Head>
-        <title>CIR Gráfica - Serviços de Impressão Gráfica, Embalagens e Sacolas Personalizadas</title>
-        <meta name="description" content="CIR Gráfica oferece serviços de embalagens e sacolas personalizadas, brindes personalizados e comunicação visual em todo o Brasil. Qualidade profissional com entrega rápida." />
-        <meta name="keywords" content="gráfica, embalagens personalizadas, sacolas personalizadas, brindes personalizados, comunicação visual, CIR Gráfica" />
-        <meta name="author" content="CIR Gráfica" />
+        <title>Pá-chego Fretes - Fretes Rápidos e Mudanças em Goiânia e Região</title>
+        <meta name="description" content="Pá-chego Fretes oferece serviços de fretes rápidos e mudanças em Goiânia, Trindade, Senador Canedo, Aparecida de Goiânia e região. +25 anos de experiência." />
+        <meta name="keywords" content="frete, mudanças, Goiânia, Trindade, Senador Canedo, Aparecida de Goiânia, Pá-chego, frete rápido, mudanças residenciais" />
+        <meta name="author" content="Pá-chego Fretes" />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://cirgrafica.com.br" />
+        <link rel="canonical" href="https://pachego.com.br" />
         
         {/* Open Graph */}
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://cirgrafica.com.br" />
-        <meta property="og:title" content="CIR Gráfica - Embalagens, Impressos gráficos e Sacolas Personalizadas" />
-        <meta property="og:description" content="Serviços de gráfica em todo o Brasil. Embalagens e sacolas personalizadas, brindes personalizados e comunicação visual." />
-        <meta property="og:image" content="https://www.cirgrafica.com.br/og-image.jpg" />
+        <meta property="og:url" content="https://pachego.com.br" />
+        <meta property="og:title" content="Pá-chego Fretes - Fretes Rápidos e Mudanças" />
+        <meta property="og:description" content="Fretes rápidos e mudanças em Goiânia e região. +25 anos de experiência com equipe confiável e profissional." />
+        <meta property="og:image" content="https://www.pachego.com.br/og-image.jpg" />
         
         {/* Twitter Card */}
         <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content="https://cirgrafica.com.br" />
-        <meta property="twitter:title" content="CIR Gráfica - Embalagens, Impressões Peronalizadas e Sacolas Personalizadas" />
-        <meta property="twitter:description" content="Serviços de gráfica em todo o Brasil. Embalagens e sacolas personalizadas, brindes personalizados e comunicação visual." />
-        <meta property="twitter:image" content="https://www.cirgrafica.com.br/og-image.jpg" />
+        <meta property="twitter:url" content="https://pachego.com.br" />
+        <meta property="twitter:title" content="Pá-chego Fretes - Fretes Rápidos e Mudanças" />
+        <meta property="twitter:description" content="Fretes rápidos e mudanças em Goiânia e região. +25 anos de experiência com equipe confiável e profissional." />
+        <meta property="twitter:image" content="https://www.pachego.com.br/og-image.jpg" />
       </Head>
 
       <Favicon />
@@ -56,28 +57,28 @@ export default function Home() {
         <div className="bg-gradient-to-br from-blue-50 via-white to-green-50 py-20 px-6">
           <div className="max-w-6xl mx-auto text-center">
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-gray-900 leading-tight">
-              CIR Gráfica - <span className="text-blue-600">Embalagens, Impressões Gráficas e Sacolas</span> Personalizadas
+              Pá-chego Fretes - <span className="text-blue-600">Fretes Rápidos e Mudanças</span> em Goiânia e Região
             </h1>
             <p className="text-xl md:text-2xl text-gray-700 mb-12 max-w-4xl mx-auto leading-relaxed">
-                          Serviços completos de gráfica em todo o Brasil. Embalagens e sacolas personalizadas, 
-            brindes personalizados e comunicação visual com qualidade profissional.
+              Serviços de fretes rápidos e mudanças em Goiânia, Trindade, Senador Canedo, 
+              Aparecida de Goiânia e região. +25 anos de experiência com equipe confiável.
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                              <a 
+                  href="https://pachego.com.br/orcar-frete/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-10 rounded-xl transition duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 text-lg"
+                >
+                  📞 Solicite um orçamento
+                </a>
               <a 
-                href="https://www.cirgrafica.com.br/portfolio-de-cases/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-10 rounded-xl transition duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 text-lg"
-              >
-                📁 Baixe nosso portfólio
-              </a>
-              <a 
-                href="https://www.cirgrafica.com.br/orcamento-rapido/" 
+                href="https://api.whatsapp.com/send?phone=5562991103510&text=Ol%C3%A1!%20vim%20pelo%20site%20gostaria%20de%20saber%20mais%20sobre%20os%20servi%C3%A7os!" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-10 rounded-xl transition duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 text-lg"
               >
-                💬 Solicite um orçamento
+                💬 Falar conosco
               </a>
             </div>
           </div>
@@ -89,7 +90,7 @@ export default function Home() {
         {/* Estados e Principais Cidades */}
         <div className="mb-16">
           <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">
-            Serviços de Gráfica por Estado
+            Serviços de Frete por Estado
           </h2>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -108,10 +109,10 @@ export default function Home() {
                     {principaisCidades[estado].map((cidade, index) => (
                       <a 
                         key={index}
-                        href={`/grafica/${estado.toLowerCase()}/${normalizeText(cidade.cidade)}`}
+                        href={`/fretes/${estado.toLowerCase()}/${normalizeText(cidade.cidade)}`}
                         className="block text-blue-600 hover:text-blue-800 hover:underline transition duration-200"
                       >
-                        • Gráfica em {cidade.cidade}
+                        • Frete em {cidade.cidade}
                       </a>
                     ))}
                   </div>
@@ -119,7 +120,7 @@ export default function Home() {
                   {cidadesPorEstado[estado].length > 5 && (
                     <div className="mt-4 pt-3 border-t border-gray-200">
                       <a 
-                        href={`/grafica/estado/${estado.toLowerCase()}`}
+                        href={`/fretes/estado/${estado.toLowerCase()}`}
                         className="text-sm text-gray-600 hover:text-blue-600 hover:underline"
                       >
                         Ver todas as {cidadesPorEstado[estado].length} cidades de {estado} →
@@ -136,11 +137,13 @@ export default function Home() {
         <div className="mb-16">
           <ImageCarousel 
             images={galleryImages} 
-            title="Materiais que podem ser solicitados"
+            title="Tipos de cargas que transportamos"
             autoPlay={true}
             interval={4000}
           />
         </div>
+
+
 
         {/* Serviços */}
         <div className="mb-16">
@@ -150,122 +153,122 @@ export default function Home() {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 hover:shadow-xl transition duration-300">
+              <div className="text-4xl mb-4">🚚</div>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">Frete Rápido</h3>
+              <p className="text-gray-600 mb-4">
+                Entrega rápida e segura para cargas urgentes com prazo 
+                garantido e cuidado especial.
+              </p>
+              <ul className="text-sm text-gray-600 space-y-1">
+                <li>• Entrega em até 24h</li>
+                <li>• Cuidado total</li>
+                <li>• Equipamentos próprios</li>
+                <li>• Atendimento 24h</li>
+              </ul>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 hover:shadow-xl transition duration-300">
+              <div className="text-4xl mb-4">💰</div>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">Frete Econômico</h3>
+              <p className="text-gray-600 mb-4">
+                Solução ideal para cargas não urgentes com preços competitivos 
+                e qualidade garantida.
+              </p>
+              <ul className="text-sm text-gray-600 space-y-1">
+                <li>• Preços acessíveis</li>
+                <li>• Entrega em 2-5 dias</li>
+                <li>• Cuidado especial</li>
+                <li>• Motorista educado</li>
+              </ul>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 hover:shadow-xl transition duration-300">
               <div className="text-4xl mb-4">🏢</div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">Materiais Institucionais</h3>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">Frete Empresarial</h3>
               <p className="text-gray-600 mb-4">
-                Cartões de visita, papel timbrado, pastas e folders institucionais 
-                para fortalecer a identidade da sua marca.
+                Soluções personalizadas para empresas com contratos mensais 
+                e condições especiais.
               </p>
               <ul className="text-sm text-gray-600 space-y-1">
-                <li>• Cartões de visita</li>
-                <li>• Papel timbrado</li>
-                <li>• Pastas executivas</li>
-                <li>• Folders institucionais</li>
+                <li>• Contratos mensais</li>
+                <li>• Descontos especiais</li>
+                <li>• Atendimento dedicado</li>
+                <li>• Horários flexíveis</li>
               </ul>
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 hover:shadow-xl transition duration-300">
-              <div className="text-4xl mb-4">🎯</div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">Materiais Promocionais</h3>
+              <div className="text-4xl mb-4">🏠</div>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">Mudanças Residenciais</h3>
               <p className="text-gray-600 mb-4">
-                Flyers, banners, adesivos e catálogos para divulgar seus produtos 
-                e serviços com impacto.
+                Serviços completos de mudanças com equipe especializada 
+                e cuidado total.
               </p>
               <ul className="text-sm text-gray-600 space-y-1">
-                <li>• Flyers e panfletos</li>
-                <li>• Banners e faixas</li>
-                <li>• Adesivos personalizados</li>
-                <li>• Catálogos promocionais</li>
+                <li>• Equipe de carregadores</li>
+                <li>• Cuidado com móveis</li>
+                <li>• Embalagem inclusa</li>
+                <li>• Montagem e desmontagem</li>
               </ul>
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 hover:shadow-xl transition duration-300">
-              <div className="text-4xl mb-4">🖨️</div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">Impressão Digital e Offset</h3>
+              <div className="text-4xl mb-4">⚡</div>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">Frete Frágil</h3>
               <p className="text-gray-600 mb-4">
-                Soluções rápidas para pequenas tiragens e produções offset para 
-                grandes volumes com acabamento impecável.
+                Cuidado especial para produtos delicados com embalagem 
+                e manuseio diferenciado.
               </p>
               <ul className="text-sm text-gray-600 space-y-1">
-                <li>• Impressão digital rápida</li>
-                <li>• Produção offset</li>
-                <li>• Pequenas e grandes tiragens</li>
-                <li>• Acabamento profissional</li>
-              </ul>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 hover:shadow-xl transition duration-300">
-              <div className="text-4xl mb-4">📚</div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">Impressão Editorial</h3>
-              <p className="text-gray-600 mb-4">
-                Revistas, livros e apostilas com acabamento impecável para 
-                projetos editoriais de qualidade.
-              </p>
-              <ul className="text-sm text-gray-600 space-y-1">
-                <li>• Revistas e jornais</li>
-                <li>• Livros e manuais</li>
-                <li>• Apostilas educacionais</li>
-                <li>• Publicações corporativas</li>
-              </ul>
-            </div>
-
-            <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 hover:shadow-xl transition duration-300">
-              <div className="text-4xl mb-4">👗</div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">Moda e Etiquetas</h3>
-              <p className="text-gray-600 mb-4">
-                Tags e etiquetas que valorizam as peças e contam a história 
-                da sua marca no setor da moda.
-              </p>
-              <ul className="text-sm text-gray-600 space-y-1">
-                <li>• Tags personalizadas</li>
-                <li>• Etiquetas de roupas</li>
-                <li>• Identificação de produtos</li>
-                <li>• Materiais têxteis</li>
+                <li>• Embalagem especial</li>
+                <li>• Manuseio cuidadoso</li>
+                <li>• Atenção total</li>
+                <li>• Proteção garantida</li>
               </ul>
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 hover:shadow-xl transition duration-300">
               <div className="text-4xl mb-4">📦</div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">Embalagens e Sacolas</h3>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">Frete de Cargas</h3>
               <p className="text-gray-600 mb-4">
-                Caixas e sacolas personalizadas para criar experiências únicas 
-                na entrega e destacar sua marca.
+                Transporte de cargas gerais com segurança e pontualidade 
+                garantidas.
               </p>
               <ul className="text-sm text-gray-600 space-y-1">
-                <li>• Caixas personalizadas</li>
-                <li>• Sacolas promocionais</li>
-                <li>• Envelopes personalizados</li>
-                <li>• Displays promocionais</li>
+                <li>• Cargas gerais</li>
+                <li>• Equipamentos próprios</li>
+                <li>• Motorista profissional</li>
+                <li>• Horários flexíveis</li>
               </ul>
             </div>
           </div>
         </div>
 
-        {/* Por que escolher a CIR */}
+        {/* Por que escolher a Pachego */}
         <div className="bg-gray-50 p-8 rounded-lg mb-16">
           <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">
-            Por que escolher a CIR Gráfica?
+            Por que escolher a Pá-chego Fretes?
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="text-center">
-              <div className="text-3xl mb-3">⚡</div>
-              <h3 className="font-semibold mb-2 text-gray-900">Entrega Rápida</h3>
-              <p className="text-sm text-gray-600">Prazos otimizados para sua necessidade</p>
+              <div className="text-3xl mb-3">⭐</div>
+              <h3 className="font-semibold mb-2 text-gray-900">Nota 5.0</h3>
+              <p className="text-sm text-gray-600">Avaliação dos clientes</p>
             </div>
             <div className="text-center">
-              <div className="text-3xl mb-3">🎯</div>
-              <h3 className="font-semibold mb-2 text-gray-900">Qualidade Garantida</h3>
-              <p className="text-sm text-gray-600">Materiais de primeira linha</p>
+              <div className="text-3xl mb-3">🛡️</div>
+              <h3 className="font-semibold mb-2 text-gray-900">Equipe Confiável</h3>
+              <p className="text-sm text-gray-600">Profissionais qualificados</p>
             </div>
             <div className="text-center">
-              <div className="text-3xl mb-3">💰</div>
-              <h3 className="font-semibold mb-2 text-gray-900">Melhor Preço</h3>
-              <p className="text-sm text-gray-600">Orçamentos competitivos</p>
+              <div className="text-3xl mb-3">📅</div>
+              <h3 className="font-semibold mb-2 text-gray-900">+25 Anos</h3>
+              <p className="text-sm text-gray-600">De experiência no mercado</p>
             </div>
             <div className="text-center">
-              <div className="text-3xl mb-3">🤝</div>
-              <h3 className="font-semibold mb-2 text-gray-900">Atendimento Personalizado</h3>
-              <p className="text-sm text-gray-600">Suporte especializado</p>
+              <div className="text-3xl mb-3">🚚</div>
+              <h3 className="font-semibold mb-2 text-gray-900">Fretes Rápidos</h3>
+              <p className="text-sm text-gray-600">Atendimento 24h</p>
             </div>
           </div>
         </div>
@@ -273,14 +276,14 @@ export default function Home() {
         {/* CTA Final */}
         <div className="text-center bg-blue-600 text-white p-8 rounded-lg">
           <h2 className="text-2xl font-bold mb-4">
-            Precisa de serviços de gráfica?
+            Precisa de serviços de frete?
           </h2>
           <p className="text-lg mb-6 opacity-90">
             Entre em contato conosco e solicite seu orçamento gratuito!
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
-              href="https://www.cirgrafica.com.br/orcamento-rapido/" 
+                        <a 
+              href="https://pachego.com.br/orcar-frete/"  
               target="_blank" 
               rel="noopener noreferrer"
               className="bg-white text-blue-600 font-semibold py-3 px-8 rounded-lg transition duration-300 hover:bg-gray-100"
@@ -288,12 +291,12 @@ export default function Home() {
               💬 Solicitar Orçamento
             </a>
             <a 
-              href="https://www.cirgrafica.com.br/portfolio-de-cases/" 
+              href="https://api.whatsapp.com/send?phone=5562991103510&text=Ol%C3%A1!%20vim%20pelo%20site%20gostaria%20de%20saber%20mais%20sobre%20os%20servi%C3%A7os!" 
               target="_blank" 
               rel="noopener noreferrer"
               className="bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-lg transition duration-300 hover:bg-white hover:text-blue-600"
             >
-              📁 Ver Portfólio
+              💬 Falar conosco
             </a>
           </div>
         </div>

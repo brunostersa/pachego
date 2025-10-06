@@ -1,10 +1,10 @@
-import cidades from '../cidades.json'
+import cidades from '../cidades-filtradas.json'
 import { normalizeText } from '../utils/normalize'
 
 const Sitemap = () => { return null }
 
 export const getServerSideProps = async ({ res }) => {
-  const baseUrl = 'https://cirgrafica.com.br'
+  const baseUrl = 'https://pachego.com.br'
   const estados = [...new Set(cidades.map(c => c.estado))]
   
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
@@ -17,14 +17,14 @@ export const getServerSideProps = async ({ res }) => {
   </url>
   ${estados.map(estado => `
   <url>
-    <loc>${baseUrl}/grafica/estado/${estado.toLowerCase()}</loc>
+    <loc>${baseUrl}/fretes/estado/${estado.toLowerCase()}</loc>
     <lastmod>${new Date().toISOString()}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>`).join('')}
   ${cidades.map(cidade => `
   <url>
-    <loc>${baseUrl}/grafica/${cidade.estado.toLowerCase()}/${normalizeText(cidade.cidade)}</loc>
+    <loc>${baseUrl}/fretes/${cidade.estado.toLowerCase()}/${normalizeText(cidade.cidade)}</loc>
     <lastmod>${new Date().toISOString()}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
