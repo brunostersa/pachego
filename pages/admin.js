@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Favicon from '../components/Favicon'
+import { buscarSolicitacoes, atualizarStatus, excluirSolicitacao, escutarSolicitacoes } from '../lib/solicitacoes'
 
 const AdminPage = () => {
   const [solicitacoes, setSolicitacoes] = useState([])
@@ -19,49 +20,46 @@ const AdminPage = () => {
     // Marcar que estamos no cliente
     setIsClient(true)
     
-    // Carregar solicitações do localStorage
-    const carregarSolicitacoes = () => {
+    // Carregar solicitações do Firebase
+    const carregarSolicitacoes = async () => {
       try {
-        console.log('=== CARREGANDO SOLICITAÇÕES ===')
+        console.log('=== CARREGANDO SOLICITAÇÕES DO FIREBASE ===')
         console.log('Ambiente:', process.env.NODE_ENV)
         console.log('URL:', window.location.href)
-        console.log('isClient:', isClient)
         
-        const dados = localStorage.getItem('solicitacoes')
-        console.log('Dados brutos do localStorage:', dados)
+        const resultado = await buscarSolicitacoes()
         
-        if (dados) {
-          const parsed = JSON.parse(dados)
-          console.log('Solicitações carregadas:', parsed.length)
-          console.log('Dados:', parsed)
-          setSolicitacoes(parsed)
+        if (resultado.success) {
+          console.log('✅ Solicitações carregadas do Firebase:', resultado.data.length)
+          setSolicitacoes(resultado.data)
         } else {
-          console.log('Nenhuma solicitação encontrada no localStorage')
+          console.error('❌ Erro ao carregar do Firebase:', resultado.error)
+          // Fallback para localStorage
+          const dados = localStorage.getItem('solicitacoes')
+          if (dados) {
+            const parsed = JSON.parse(dados)
+            console.log('💾 Carregando do localStorage como fallback:', parsed.length)
+            setSolicitacoes(parsed)
+          }
         }
-        console.log('=== FIM CARREGAMENTO ===')
       } catch (error) {
-        console.error('Erro ao carregar solicitações:', error)
+        console.error('❌ Erro geral ao carregar:', error)
       }
     }
 
+    // Carregar inicialmente
     carregarSolicitacoes()
     
-    // Listener para detectar mudanças no localStorage
-    const handleStorageChange = (e) => {
-      if (e.key === 'solicitacoes') {
-        console.log('Storage mudou, recarregando...')
-        carregarSolicitacoes()
-      }
-    }
-    
-    window.addEventListener('storage', handleStorageChange)
-    
-    // Atualizar a cada 5 segundos
-    const interval = setInterval(carregarSolicitacoes, 5000)
+    // Escutar mudanças em tempo real do Firebase
+    const unsubscribe = escutarSolicitacoes((novasSolicitacoes) => {
+      console.log('🔄 Atualização em tempo real:', novasSolicitacoes.length)
+      setSolicitacoes(novasSolicitacoes)
+    })
     
     return () => {
-      clearInterval(interval)
-      window.removeEventListener('storage', handleStorageChange)
+      if (unsubscribe) {
+        unsubscribe()
+      }
     }
   }, [])
 
@@ -72,19 +70,31 @@ const AdminPage = () => {
     return solicitacoes.filter(s => s.status === filtroStatus)
   }
 
-  const atualizarStatus = (id, novoStatus) => {
-    const solicitacoesAtualizadas = solicitacoes.map(s => 
-      s.id === id ? { ...s, status: novoStatus } : s
-    )
-    setSolicitacoes(solicitacoesAtualizadas)
-    localStorage.setItem('solicitacoes', JSON.stringify(solicitacoesAtualizadas))
+  const atualizarStatusSolicitacao = async (id, novoStatus) => {
+    try {
+      const resultado = await atualizarStatus(id, novoStatus)
+      if (resultado.success) {
+        console.log('✅ Status atualizado no Firebase')
+      } else {
+        console.error('❌ Erro ao atualizar status:', resultado.error)
+      }
+    } catch (error) {
+      console.error('❌ Erro geral ao atualizar:', error)
+    }
   }
 
-  const excluirSolicitacao = (id) => {
+  const excluirSolicitacaoSolicitacao = async (id) => {
     if (confirm('Tem certeza que deseja excluir esta solicitação?')) {
-      const solicitacoesAtualizadas = solicitacoes.filter(s => s.id !== id)
-      setSolicitacoes(solicitacoesAtualizadas)
-      localStorage.setItem('solicitacoes', JSON.stringify(solicitacoesAtualizadas))
+      try {
+        const resultado = await excluirSolicitacao(id)
+        if (resultado.success) {
+          console.log('✅ Solicitação excluída do Firebase')
+        } else {
+          console.error('❌ Erro ao excluir:', resultado.error)
+        }
+      } catch (error) {
+        console.error('❌ Erro geral ao excluir:', error)
+      }
     }
   }
 
@@ -313,7 +323,7 @@ const AdminPage = () => {
     }
     
     // Atualizar status
-    atualizarStatus(solicitacaoParaProposta.id, 'em_andamento')
+    atualizarStatusSolicitacao(solicitacaoParaProposta.id, 'em_andamento')
   }
 
   const gerarMensagemWhatsApp = () => {
@@ -637,7 +647,7 @@ _Equipe Pá-chego Fretes_`
                               </button>
                               <select
                                 value={solicitacao.status}
-                                onChange={(e) => atualizarStatus(solicitacao.id, e.target.value)}
+                                onChange={(e) => atualizarStatusSolicitacao(solicitacao.id, e.target.value)}
                                 className="text-xs border-2 border-gray-200 rounded-lg px-2 py-1.5 bg-white hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-200"
                               >
                                 <option value="pendente">⏳ Pendente</option>
@@ -646,7 +656,7 @@ _Equipe Pá-chego Fretes_`
                                 <option value="cancelada">❌ Cancelada</option>
                               </select>
                               <button
-                                onClick={() => excluirSolicitacao(solicitacao.id)}
+                                onClick={() => excluirSolicitacaoSolicitacao(solicitacao.id)}
                                 className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-semibold rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
                               >
                                 🗑️ Excluir

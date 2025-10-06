@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { salvarSolicitacao } from '../lib/solicitacoes'
 
 const CalculadoraSimples = () => {
   const [origem, setOrigem] = useState('')
@@ -102,39 +103,35 @@ const CalculadoraSimples = () => {
       status: 'pendente'
     }
 
-        // Salvar no localStorage (simulando banco de dados)
+        // Salvar no Firebase Firestore
         try {
-          if (typeof window !== 'undefined') {
-            console.log('=== SALVANDO SOLICITAÇÃO ===')
-            console.log('Ambiente:', process.env.NODE_ENV)
-            console.log('URL:', window.location.href)
-            
-            // Aguardar um pouco para garantir que o DOM está pronto
-            setTimeout(() => {
-              try {
-                const solicitacoes = JSON.parse(localStorage.getItem('solicitacoes') || '[]')
-                console.log('Solicitações existentes:', solicitacoes.length)
-                
-                solicitacoes.push(solicitacao)
-                localStorage.setItem('solicitacoes', JSON.stringify(solicitacoes))
-                
-                // Verificar se realmente salvou
-                const verificacao = JSON.parse(localStorage.getItem('solicitacoes') || '[]')
-                console.log('Verificação pós-salvamento:', verificacao.length)
-                console.log('Solicitação salva:', solicitacao)
-                
-                // Forçar evento de storage para sincronizar
-                window.dispatchEvent(new Event('storage'))
-                console.log('=== FIM SALVAMENTO ===')
-              } catch (error) {
-                console.error('Erro no setTimeout:', error)
-              }
-            }, 100)
+          console.log('=== SALVANDO SOLICITAÇÃO NO FIREBASE ===')
+          console.log('Solicitação:', solicitacao)
+          
+          const resultado = await salvarSolicitacao(solicitacao)
+          
+          if (resultado.success) {
+            console.log('✅ Solicitação salva com sucesso no Firebase!')
+            console.log('ID:', resultado.id)
           } else {
-            console.log('localStorage não disponível (SSR)')
+            console.error('❌ Erro ao salvar no Firebase:', resultado.error)
+            // Fallback para localStorage se Firebase falhar
+            if (typeof window !== 'undefined') {
+              const solicitacoes = JSON.parse(localStorage.getItem('solicitacoes') || '[]')
+              solicitacoes.push(solicitacao)
+              localStorage.setItem('solicitacoes', JSON.stringify(solicitacoes))
+              console.log('💾 Salvo no localStorage como fallback')
+            }
           }
         } catch (error) {
-          console.error('Erro ao salvar solicitação:', error)
+          console.error('❌ Erro geral ao salvar:', error)
+          // Fallback para localStorage
+          if (typeof window !== 'undefined') {
+            const solicitacoes = JSON.parse(localStorage.getItem('solicitacoes') || '[]')
+            solicitacoes.push(solicitacao)
+            localStorage.setItem('solicitacoes', JSON.stringify(solicitacoes))
+            console.log('💾 Salvo no localStorage como fallback')
+          }
         }
 
         setResultado(solicitacao)
