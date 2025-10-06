@@ -16,43 +16,45 @@ const AdminPage = () => {
   const [timeline, setTimeline] = useState([])
   const [isClient, setIsClient] = useState(false)
 
+  // Carregar solicitações do Firebase
+  const carregarSolicitacoes = async () => {
+    try {
+      console.log('=== CARREGANDO SOLICITAÇÕES DO FIREBASE ===')
+      console.log('Ambiente:', process.env.NODE_ENV)
+      console.log('URL:', window.location.href)
+      
+      const resultado = await buscarSolicitacoes()
+      
+      if (resultado.success) {
+        console.log('✅ Solicitações carregadas do Firebase:', resultado.data.length)
+        setSolicitacoes(resultado.data)
+      } else {
+        console.error('❌ Erro ao carregar do Firebase:', resultado.error)
+        // Fallback para localStorage
+        const dados = localStorage.getItem('solicitacoes')
+        if (dados) {
+          const parsed = JSON.parse(dados)
+          console.log('💾 Carregando do localStorage como fallback:', parsed.length)
+          setSolicitacoes(parsed)
+        }
+      }
+    } catch (error) {
+      console.error('❌ Erro geral ao carregar:', error)
+    }
+  }
+
   useEffect(() => {
     // Marcar que estamos no cliente
     setIsClient(true)
     
-    // Carregar solicitações do Firebase
-    const carregarSolicitacoes = async () => {
-      try {
-        console.log('=== CARREGANDO SOLICITAÇÕES DO FIREBASE ===')
-        console.log('Ambiente:', process.env.NODE_ENV)
-        console.log('URL:', window.location.href)
-        
-        const resultado = await buscarSolicitacoes()
-        
-        if (resultado.success) {
-          console.log('✅ Solicitações carregadas do Firebase:', resultado.data.length)
-          setSolicitacoes(resultado.data)
-        } else {
-          console.error('❌ Erro ao carregar do Firebase:', resultado.error)
-          // Fallback para localStorage
-          const dados = localStorage.getItem('solicitacoes')
-          if (dados) {
-            const parsed = JSON.parse(dados)
-            console.log('💾 Carregando do localStorage como fallback:', parsed.length)
-            setSolicitacoes(parsed)
-          }
-        }
-      } catch (error) {
-        console.error('❌ Erro geral ao carregar:', error)
-      }
-    }
-
     // Carregar inicialmente
     carregarSolicitacoes()
     
     // Escutar mudanças em tempo real do Firebase
     const unsubscribe = escutarSolicitacoes((novasSolicitacoes) => {
-      console.log('🔄 Atualização em tempo real:', novasSolicitacoes.length)
+      console.log('🔄 LISTENER FIREBASE ATIVADO!')
+      console.log('📊 Novas solicitações recebidas:', novasSolicitacoes.length)
+      console.log('📋 IDs das solicitações:', novasSolicitacoes.map(s => s.id))
       setSolicitacoes(novasSolicitacoes)
     })
     
@@ -72,7 +74,13 @@ const AdminPage = () => {
 
   const atualizarStatusSolicitacao = async (id, novoStatus) => {
     try {
-      const resultado = await atualizarStatus(id, novoStatus)
+      console.log('🔄 Atualizando status:', id, 'Tipo:', typeof id, 'Para:', novoStatus)
+      
+      // Converter ID para string se necessário
+      const idString = String(id)
+      console.log('🔄 ID convertido para string:', idString)
+      
+      const resultado = await atualizarStatus(idString, novoStatus)
       if (resultado.success) {
         console.log('✅ Status atualizado no Firebase')
       } else {
@@ -86,18 +94,38 @@ const AdminPage = () => {
   const excluirSolicitacaoSolicitacao = async (id) => {
     if (confirm('Tem certeza que deseja excluir esta solicitação?')) {
       try {
-        console.log('🗑️ Excluindo solicitação:', id)
-        const resultado = await excluirSolicitacao(id)
+        console.log('🗑️ EXCLUINDO SOLICITAÇÃO')
+        console.log('ID original:', id, 'Tipo:', typeof id)
+        console.log('ID completo:', JSON.stringify(id))
+        
+        // Verificar se é um ID válido do Firebase
+        if (!id || id === 'undefined' || id === 'null') {
+          console.error('❌ ID inválido!')
+          alert('ID da solicitação inválido!')
+          return
+        }
+        
+        // Converter ID para string se necessário
+        const idString = String(id)
+        console.log('ID convertido para string:', idString)
+        
+        console.log('🔥 Chamando função excluirSolicitacao...')
+        const resultado = await excluirSolicitacao(idString)
+        
+        console.log('📊 Resultado da exclusão:', resultado)
+        
         if (resultado.success) {
-          console.log('✅ Solicitação excluída do Firebase')
-          // Recarregar a lista
-          await carregarSolicitacoes()
+          console.log('✅ Solicitação excluída do Firebase com sucesso!')
+          console.log('🔄 Aguardando atualização em tempo real...')
+          // Não precisa recarregar manualmente, o listener vai atualizar
+          console.log('✅ Aguardando listener do Firebase...')
         } else {
           console.error('❌ Erro ao excluir:', resultado.error)
           alert('Erro ao excluir solicitação: ' + resultado.error)
         }
       } catch (error) {
         console.error('❌ Erro geral ao excluir:', error)
+        console.error('Stack trace:', error.stack)
         alert('Erro ao excluir solicitação: ' + error.message)
       }
     }
@@ -455,7 +483,7 @@ _Equipe Pá-chego Fretes_`
               </div>
               <div className="flex items-center space-x-4">
                 <a
-                  href="/calculadora"
+                  href="/form"
                   className="px-4 py-2 text-gray-600 hover:text-gray-900 font-medium transition-colors"
                 >
                   Calculadora

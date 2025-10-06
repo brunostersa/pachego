@@ -84,7 +84,7 @@ Para aceitar ou tirar dúvidas, entre em contato conosco!`
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Proposta não encontrada</h1>
           <p className="text-gray-600 mb-6">A proposta solicitada não existe ou expirou.</p>
           <a 
-            href="/calculadora" 
+            href="/form" 
             className="inline-block bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors"
           >
             Fazer Nova Cotação
@@ -192,7 +192,7 @@ Para aceitar ou tirar dúvidas, entre em contato conosco!`
               </a>
               
               <a
-                href="/calculadora"
+                href="/form"
                 className="inline-flex items-center justify-center px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
               >
                 Fazer Nova Cotação

@@ -82,7 +82,7 @@ const CalculadoraSimples = () => {
 
     // Criar objeto com os dados da solicitação
     const solicitacao = {
-      id: Date.now(), // ID simples baseado em timestamp
+      // Não incluir ID - o Firebase vai gerar automaticamente
       data: new Date().toLocaleString('pt-BR'),
       tipoServico,
       nome,

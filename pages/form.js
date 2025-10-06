@@ -11,12 +11,12 @@ export default function CalculadoraPage() {
         <meta name="description" content="Calcule o valor do seu frete online. Ferramenta gratuita para estimar preços de frete e mudanças em Goiânia e região. Orçamento rápido e preciso." />
         <meta name="keywords" content="calculadora de frete, orçamento frete online, preço frete Goiânia, calculadora mudanças, frete rápido Goiânia" />
         <meta name="author" content="Pá-chego Fretes" />
-        <link rel="canonical" href="https://pachego.com.br/calculadora" />
+        <link rel="canonical" href="https://pachego.com.br/form" />
         
         {/* Open Graph */}
         <meta property="og:title" content="Calculadora de Frete - Pá-chego Fretes" />
         <meta property="og:description" content="Calcule o valor do seu frete online. Ferramenta gratuita para estimar preços de frete e mudanças em Goiânia e região." />
-        <meta property="og:url" content="https://pachego.com.br/calculadora" />
+        <meta property="og:url" content="https://pachego.com.br/form" />
         <meta property="og:type" content="website" />
         
         {/* Twitter Card */}
