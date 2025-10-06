@@ -8,36 +8,52 @@ const PropostaPage = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [isClient, setIsClient] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     // Marcar que estamos no cliente
+    setMounted(true)
     setIsClient(true)
-    
-    if (id) {
+  }, [])
+
+  useEffect(() => {
+    if (mounted && id && router.isReady) {
       carregarProposta()
     }
-  }, [id])
+  }, [mounted, id, router.isReady])
 
   const carregarProposta = () => {
     try {
+      console.log('🔍 Carregando proposta...')
+      console.log('ID:', id)
+      console.log('isClient:', isClient)
+      
       // Verificar se estamos no cliente
       if (!isClient) {
+        console.log('❌ Não é cliente ainda')
         return
       }
       
       // Buscar proposta no localStorage
-      const propostaData = localStorage.getItem(`proposta_${id}`)
+      const chave = `proposta_${id}`
+      console.log('Chave do localStorage:', chave)
+      
+      const propostaData = localStorage.getItem(chave)
+      console.log('Dados encontrados:', propostaData ? 'Sim' : 'Não')
       
       if (propostaData) {
         const propostaParsed = JSON.parse(propostaData)
+        console.log('Proposta parseada:', propostaParsed)
         setProposta(propostaParsed)
         setLoading(false)
       } else {
+        console.log('❌ Proposta não encontrada no localStorage')
         setError('Proposta não encontrada')
         setLoading(false)
       }
     } catch (err) {
-      console.error('Erro ao carregar proposta:', err)
+      console.error('❌ Erro ao carregar proposta:', err)
+      console.error('Stack:', err.stack)
       setError('Erro ao carregar proposta')
       setLoading(false)
     }
@@ -78,7 +94,7 @@ Para aceitar ou tirar dúvidas, entre em contato conosco!`
   }
 
   // Renderizar apenas no cliente
-  if (!isClient) {
+  if (!mounted) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="text-center">
