@@ -498,6 +498,7 @@ _Equipe Pá-chego Fretes_`
                 </div>
               </div>
             </div>
+            )}
 
             {/* Filtros */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
@@ -521,7 +522,6 @@ _Equipe Pá-chego Fretes_`
                 </div>
               </div>
             </div>
-            )}
 
             {/* Lista de Solicitações */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
