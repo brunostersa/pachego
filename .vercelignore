@@ -38,8 +38,3 @@ coverage/
 # Documentação de desenvolvimento
 GOOGLE_MAPS_SETUP.md
 README.md
-
-# Arquivos de dados locais (opcional)
-cidades-backup.json
-cidades-filtradas.json
-cidades.json
