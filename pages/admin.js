@@ -86,14 +86,19 @@ const AdminPage = () => {
   const excluirSolicitacaoSolicitacao = async (id) => {
     if (confirm('Tem certeza que deseja excluir esta solicitação?')) {
       try {
+        console.log('🗑️ Excluindo solicitação:', id)
         const resultado = await excluirSolicitacao(id)
         if (resultado.success) {
           console.log('✅ Solicitação excluída do Firebase')
+          // Recarregar a lista
+          await carregarSolicitacoes()
         } else {
           console.error('❌ Erro ao excluir:', resultado.error)
+          alert('Erro ao excluir solicitação: ' + resultado.error)
         }
       } catch (error) {
         console.error('❌ Erro geral ao excluir:', error)
+        alert('Erro ao excluir solicitação: ' + error.message)
       }
     }
   }
