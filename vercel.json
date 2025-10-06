@@ -6,20 +6,6 @@
       "use": "@vercel/next"
     }
   ],
-  "routes": [
-    {
-      "src": "/admin",
-      "dest": "/admin"
-    },
-    {
-      "src": "/calculadora",
-      "dest": "/calculadora"
-    },
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -38,10 +24,5 @@
         }
       ]
     }
-  ],
-  "functions": {
-    "pages/api/**/*.js": {
-      "maxDuration": 10
-    }
-  }
+  ]
 }
