@@ -106,7 +106,7 @@ Para aceitar ou tirar dúvidas, entre em contato conosco!`
             </div>
             <div className="text-right">
               <p className="text-sm text-gray-500">ID: {proposta.id}</p>
-              <p className="text-sm text-gray-500">Gerada em: {new Date(proposta.data).toLocaleDateString('pt-BR', {
+              <p className="text-sm text-gray-500">Gerada em: {new Date(proposta.data).toLocaleString('pt-BR', {
                 day: '2-digit',
                 month: '2-digit',
                 year: 'numeric',
