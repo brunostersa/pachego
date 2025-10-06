@@ -103,9 +103,21 @@ const CalculadoraSimples = () => {
     }
 
         // Salvar no localStorage (simulando banco de dados)
-        const solicitacoes = JSON.parse(localStorage.getItem('solicitacoes') || '[]')
-        solicitacoes.push(solicitacao)
-        localStorage.setItem('solicitacoes', JSON.stringify(solicitacoes))
+        try {
+          if (typeof window !== 'undefined') {
+            const solicitacoes = JSON.parse(localStorage.getItem('solicitacoes') || '[]')
+            solicitacoes.push(solicitacao)
+            localStorage.setItem('solicitacoes', JSON.stringify(solicitacoes))
+            
+            // Debug: verificar se salvou
+            console.log('Solicitação salva:', solicitacao)
+            console.log('Total de solicitações:', solicitacoes.length)
+          } else {
+            console.log('localStorage não disponível (SSR)')
+          }
+        } catch (error) {
+          console.error('Erro ao salvar solicitação:', error)
+        }
 
         setResultado(solicitacao)
         setMostrarTelaSucesso(true)

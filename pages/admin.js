@@ -13,13 +13,22 @@ const AdminPage = () => {
   const [linkProposta, setLinkProposta] = useState('')
   const [mostrarDetalhes, setMostrarDetalhes] = useState(false)
   const [timeline, setTimeline] = useState([])
+  const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
+    // Marcar que estamos no cliente
+    setIsClient(true)
+    
     // Carregar solicitações do localStorage
     const carregarSolicitacoes = () => {
-      const dados = localStorage.getItem('solicitacoes')
-      if (dados) {
-        setSolicitacoes(JSON.parse(dados))
+      try {
+        const dados = localStorage.getItem('solicitacoes')
+        if (dados) {
+          const parsed = JSON.parse(dados)
+          setSolicitacoes(parsed)
+        }
+      } catch (error) {
+        console.error('Erro ao carregar solicitações:', error)
       }
     }
 
@@ -428,7 +437,18 @@ _Equipe Pá-chego Fretes_`
           <div className="container mx-auto px-6">
             <div className="max-w-7xl mx-auto">
 
+            {/* Loading State */}
+            {!isClient && (
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
+                <div className="text-center">
+                  <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                  <p className="text-gray-600">Carregando dados...</p>
+                </div>
+              </div>
+            )}
+
             {/* Dashboard Stats */}
+            {isClient && (
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <div className="flex items-center justify-between">
@@ -1080,6 +1100,7 @@ _Equipe Pá-chego Fretes_`
                 </div>
               </div>
             </div>
+            )}
           </div>
         )}
         </main>
