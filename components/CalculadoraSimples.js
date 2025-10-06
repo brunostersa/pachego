@@ -71,7 +71,7 @@ const CalculadoraSimples = () => {
   }
 
 
-  const enviarCotacao = () => {
+  const enviarCotacao = async () => {
     // Limpar erros anteriores
     setErros({})
     
