@@ -105,13 +105,31 @@ const CalculadoraSimples = () => {
         // Salvar no localStorage (simulando banco de dados)
         try {
           if (typeof window !== 'undefined') {
-            const solicitacoes = JSON.parse(localStorage.getItem('solicitacoes') || '[]')
-            solicitacoes.push(solicitacao)
-            localStorage.setItem('solicitacoes', JSON.stringify(solicitacoes))
+            console.log('=== SALVANDO SOLICITAÇÃO ===')
+            console.log('Ambiente:', process.env.NODE_ENV)
+            console.log('URL:', window.location.href)
             
-            // Debug: verificar se salvou
-            console.log('Solicitação salva:', solicitacao)
-            console.log('Total de solicitações:', solicitacoes.length)
+            // Aguardar um pouco para garantir que o DOM está pronto
+            setTimeout(() => {
+              try {
+                const solicitacoes = JSON.parse(localStorage.getItem('solicitacoes') || '[]')
+                console.log('Solicitações existentes:', solicitacoes.length)
+                
+                solicitacoes.push(solicitacao)
+                localStorage.setItem('solicitacoes', JSON.stringify(solicitacoes))
+                
+                // Verificar se realmente salvou
+                const verificacao = JSON.parse(localStorage.getItem('solicitacoes') || '[]')
+                console.log('Verificação pós-salvamento:', verificacao.length)
+                console.log('Solicitação salva:', solicitacao)
+                
+                // Forçar evento de storage para sincronizar
+                window.dispatchEvent(new Event('storage'))
+                console.log('=== FIM SALVAMENTO ===')
+              } catch (error) {
+                console.error('Erro no setTimeout:', error)
+              }
+            }, 100)
           } else {
             console.log('localStorage não disponível (SSR)')
           }

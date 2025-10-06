@@ -22,11 +22,23 @@ const AdminPage = () => {
     // Carregar solicitações do localStorage
     const carregarSolicitacoes = () => {
       try {
+        console.log('=== CARREGANDO SOLICITAÇÕES ===')
+        console.log('Ambiente:', process.env.NODE_ENV)
+        console.log('URL:', window.location.href)
+        console.log('isClient:', isClient)
+        
         const dados = localStorage.getItem('solicitacoes')
+        console.log('Dados brutos do localStorage:', dados)
+        
         if (dados) {
           const parsed = JSON.parse(dados)
+          console.log('Solicitações carregadas:', parsed.length)
+          console.log('Dados:', parsed)
           setSolicitacoes(parsed)
+        } else {
+          console.log('Nenhuma solicitação encontrada no localStorage')
         }
+        console.log('=== FIM CARREGAMENTO ===')
       } catch (error) {
         console.error('Erro ao carregar solicitações:', error)
       }
@@ -34,9 +46,23 @@ const AdminPage = () => {
 
     carregarSolicitacoes()
     
+    // Listener para detectar mudanças no localStorage
+    const handleStorageChange = (e) => {
+      if (e.key === 'solicitacoes') {
+        console.log('Storage mudou, recarregando...')
+        carregarSolicitacoes()
+      }
+    }
+    
+    window.addEventListener('storage', handleStorageChange)
+    
     // Atualizar a cada 5 segundos
     const interval = setInterval(carregarSolicitacoes, 5000)
-    return () => clearInterval(interval)
+    
+    return () => {
+      clearInterval(interval)
+      window.removeEventListener('storage', handleStorageChange)
+    }
   }, [])
 
   const filtrarSolicitacoes = () => {
