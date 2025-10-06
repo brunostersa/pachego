@@ -7,8 +7,12 @@ const PropostaPage = () => {
   const [proposta, setProposta] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
+    // Marcar que estamos no cliente
+    setIsClient(true)
+    
     if (id) {
       carregarProposta()
     }
@@ -16,6 +20,11 @@ const PropostaPage = () => {
 
   const carregarProposta = () => {
     try {
+      // Verificar se estamos no cliente
+      if (!isClient) {
+        return
+      }
+      
       // Buscar proposta no localStorage
       const propostaData = localStorage.getItem(`proposta_${id}`)
       
@@ -28,6 +37,7 @@ const PropostaPage = () => {
         setLoading(false)
       }
     } catch (err) {
+      console.error('Erro ao carregar proposta:', err)
       setError('Erro ao carregar proposta')
       setLoading(false)
     }
@@ -41,9 +51,11 @@ const PropostaPage = () => {
   }
 
   const gerarMensagemWhatsApp = () => {
-    if (!proposta) return ''
+    if (!proposta || !isClient) return ''
     
     const numero = '62991103510'
+    const urlAtual = window.location.href
+    
     const mensagem = `Olá! Sua proposta de frete está pronta! 🚛
 
 📋 *Detalhes da Proposta:*
@@ -56,13 +68,25 @@ const PropostaPage = () => {
 💰 *Valor Total: ${formatarValor(proposta.valor)}*
 
 📄 *Acesse sua proposta completa aqui:*
-${window.location.href}
+${urlAtual}
 
 ⏰ *Esta proposta é válida por 7 dias.*
 
 Para aceitar ou tirar dúvidas, entre em contato conosco!`
 
     return `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`
+  }
+
+  // Renderizar apenas no cliente
+  if (!isClient) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">Carregando...</p>
+        </div>
+      </div>
+    )
   }
 
   if (loading) {
