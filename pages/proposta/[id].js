@@ -44,7 +44,31 @@ const PropostaPage = () => {
       if (propostaData) {
         const propostaParsed = JSON.parse(propostaData)
         console.log('Proposta parseada:', propostaParsed)
-        setProposta(propostaParsed)
+        
+        // Verificar se a estrutura está correta
+        if (propostaParsed.solicitacao) {
+          console.log('✅ Estrutura correta encontrada')
+          setProposta(propostaParsed)
+        } else {
+          console.log('❌ Estrutura incorreta, tentando corrigir...')
+          // Se não tem solicitacao, pode ser que os dados estão diretamente no objeto
+          const propostaCorrigida = {
+            id: propostaParsed.id || id,
+            data: propostaParsed.data || new Date().toISOString(),
+            valor: propostaParsed.valor || 0,
+            solicitacao: {
+              nome: propostaParsed.nome || 'Nome não informado',
+              celular: propostaParsed.celular || 'Celular não informado',
+              origem: propostaParsed.origem || 'Origem não informada',
+              destino: propostaParsed.destino || 'Destino não informado',
+              tipoServico: propostaParsed.tipoServico || 'Serviço não informado',
+              data: propostaParsed.data || new Date().toISOString(),
+              observacoes: propostaParsed.observacoes || ''
+            }
+          }
+          console.log('Proposta corrigida:', propostaCorrigida)
+          setProposta(propostaCorrigida)
+        }
         setLoading(false)
       } else {
         console.log('❌ Proposta não encontrada no localStorage')
@@ -67,7 +91,7 @@ const PropostaPage = () => {
   }
 
   const gerarMensagemWhatsApp = () => {
-    if (!proposta || !isClient) return ''
+    if (!proposta || !isClient || !proposta.solicitacao) return ''
     
     const numero = '62991103510'
     const urlAtual = window.location.href
@@ -75,13 +99,13 @@ const PropostaPage = () => {
     const mensagem = `Olá! Sua proposta de frete está pronta! 🚛
 
 📋 *Detalhes da Proposta:*
-• Cliente: ${proposta.solicitacao.nome}
-• Origem: ${proposta.solicitacao.origem}
-• Destino: ${proposta.solicitacao.destino}
-• Serviço: ${proposta.solicitacao.tipoServico}
-• Data: ${proposta.solicitacao.data}
+• Cliente: ${proposta.solicitacao.nome || 'Não informado'}
+• Origem: ${proposta.solicitacao.origem || 'Não informado'}
+• Destino: ${proposta.solicitacao.destino || 'Não informado'}
+• Serviço: ${proposta.solicitacao.tipoServico || 'Não informado'}
+• Data: ${proposta.solicitacao.data || 'Não informado'}
 
-💰 *Valor Total: ${formatarValor(proposta.valor)}*
+💰 *Valor Total: ${formatarValor(proposta.valor || 0)}*
 
 📄 *Acesse sua proposta completa aqui:*
 ${urlAtual}
@@ -167,11 +191,11 @@ Para aceitar ou tirar dúvidas, entre em contato conosco!`
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <p className="text-sm text-gray-600">Nome</p>
-                <p className="font-medium">{proposta.solicitacao.nome}</p>
+                <p className="font-medium">{proposta.solicitacao?.nome || 'Não informado'}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-600">Celular WhatsApp</p>
-                <p className="font-medium">{proposta.solicitacao.celular}</p>
+                <p className="font-medium">{proposta.solicitacao?.celular || 'Não informado'}</p>
               </div>
             </div>
           </div>
@@ -182,24 +206,24 @@ Para aceitar ou tirar dúvidas, entre em contato conosco!`
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <p className="text-sm text-gray-600">Origem</p>
-                <p className="font-medium text-lg">{proposta.solicitacao.origem}</p>
+                <p className="font-medium text-lg">{proposta.solicitacao?.origem || 'Não informado'}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-600">Destino</p>
-                <p className="font-medium text-lg">{proposta.solicitacao.destino}</p>
+                <p className="font-medium text-lg">{proposta.solicitacao?.destino || 'Não informado'}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-600">Tipo de Serviço</p>
-                <p className="font-medium">{proposta.solicitacao.tipoServico}</p>
+                <p className="font-medium">{proposta.solicitacao?.tipoServico || 'Não informado'}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-600">Data Desejada</p>
-                <p className="font-medium">{proposta.solicitacao.data}</p>
+                <p className="font-medium">{proposta.solicitacao?.data || 'Não informado'}</p>
               </div>
             </div>
 
             {/* Observações */}
-            {proposta.solicitacao.observacoes && (
+            {proposta.solicitacao?.observacoes && (
               <div className="mt-6">
                 <p className="text-sm text-gray-600">Observações</p>
                 <p className="font-medium bg-gray-50 p-3 rounded-lg">{proposta.solicitacao.observacoes}</p>
