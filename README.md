@@ -64,7 +64,7 @@ npm run dev
 ```
 NEXT_PUBLIC_APP_URL=https://pachego.vercel.app
 NEXT_PUBLIC_APP_NAME=Pá-chego Fretes
-NEXT_PUBLIC_WHATSAPP_NUMBER=5562991103510
+NEXT_PUBLIC_WHATSAPP_NUMBER=62991103510
 NEXT_PUBLIC_EMAIL=contato@pachego.com.br
 NEXT_PUBLIC_SITE_URL=https://pachego.com.br
 ```

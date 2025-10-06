@@ -23,6 +23,26 @@ const CalculadoraSimples = () => {
   const [mostrarSugestoesOrigem, setMostrarSugestoesOrigem] = useState(false)
   const [mostrarSugestoesDestino, setMostrarSugestoesDestino] = useState(false)
 
+  // Função para aplicar máscara de telefone
+  const formatarTelefone = (valor) => {
+    // Remove tudo que não é dígito
+    const apenasNumeros = valor.replace(/\D/g, '')
+    
+    // Aplica a máscara (62) 99999-9999
+    if (apenasNumeros.length <= 2) {
+      return apenasNumeros
+    } else if (apenasNumeros.length <= 7) {
+      return `(${apenasNumeros.slice(0, 2)}) ${apenasNumeros.slice(2)}`
+    } else {
+      return `(${apenasNumeros.slice(0, 2)}) ${apenasNumeros.slice(2, 7)}-${apenasNumeros.slice(7, 11)}`
+    }
+  }
+
+  const handleCelularChange = (e) => {
+    const valorFormatado = formatarTelefone(e.target.value)
+    setCelular(valorFormatado)
+  }
+
   const buscarOrigem = (query) => {
     setOrigem(query)
     if (query.length >= 2) {
@@ -441,7 +461,7 @@ const CalculadoraSimples = () => {
               <input
                 type="tel"
                 value={celular}
-                onChange={(e) => setCelular(e.target.value)}
+                onChange={handleCelularChange}
                 placeholder="(62) 99999-9999"
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-colors"
                 required
@@ -500,7 +520,7 @@ const CalculadoraSimples = () => {
           
           <div className="mt-6 flex gap-3">
             <a
-              href="https://api.whatsapp.com/send?phone=5562991103510&text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20um%20orçamento%20de%20frete!"
+              href="https://api.whatsapp.com/send?phone=62991103510&text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20um%20orçamento%20de%20frete!"
               target="_blank"
               rel="noopener noreferrer"
               className="flex-1 bg-green-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-green-700 transition-colors text-center"

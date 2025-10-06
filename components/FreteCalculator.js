@@ -779,7 +779,7 @@ const FreteCalculator = () => {
               📋 Solicitar Orçamento Oficial
             </a>
             <a
-              href="https://api.whatsapp.com/send?phone=5562991103510&text=Ol%C3%A1!%20vim%20pelo%20site%20gostaria%20de%20um%20or%C3%A7amento%20de%20frete!"
+              href="https://api.whatsapp.com/send?phone=62991103510&text=Ol%C3%A1!%20vim%20pelo%20site%20gostaria%20de%20um%20or%C3%A7amento%20de%20frete!"
               target="_blank"
               rel="noopener noreferrer"
               className="flex-1 bg-green-500 text-white py-2 px-4 rounded-lg text-center font-semibold hover:bg-green-600 transition duration-300"

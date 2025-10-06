@@ -58,7 +58,7 @@ export default function FreteCidade({ cidade, estado, cidadesProximas }) {
     "name": "Pá-chego Fretes",
     "description": `Pá-chego Fretes em ${cidade}, referência em fretes rápidos e mudanças com +25 anos de experiência.`,
     "url": canonicalUrl,
-    "telephone": "+5562991103510",
+    "telephone": "+62991103510",
     "email": "atendimento@pachego.com.br",
 
     "geo": {
@@ -268,7 +268,7 @@ export default function FreteCidade({ cidade, estado, cidadesProximas }) {
           <li><strong>Qual o prazo médio?</strong> O prazo varia conforme o tipo de frete: expresso (24h), econômico (2-5 dias) ou padrão (3-7 dias).</li>
           <li><strong>Vocês oferecem seguro?</strong> Sim! Todas as cargas são tratadas com cuidado total para garantir total segurança durante o transporte.</li>
           <li><strong>Como acompanho minha encomenda?</strong> Você pode entrar em contato conosco pelo WhatsApp para acompanhar o status da sua entrega.</li>
-          <li><strong>Posso pedir orçamento pelo WhatsApp?</strong> Sim! <a className="text-blue-600 hover:underline" target="_blank" href="https://api.whatsapp.com/send?phone=5562991103510&text=Ol%C3%A1!%20vim%20pelo%20site%20gostaria%20de%20um%20or%C3%A7amento%20de%20frete!">Clique aqui</a> para ser atendido</li>
+          <li><strong>Posso pedir orçamento pelo WhatsApp?</strong> Sim! <a className="text-blue-600 hover:underline" target="_blank" href="https://api.whatsapp.com/send?phone=62991103510&text=Ol%C3%A1!%20vim%20pelo%20site%20gostaria%20de%20um%20or%C3%A7amento%20de%20frete!">Clique aqui</a> para ser atendido</li>
         </ul>
       </section>
 
@@ -325,7 +325,7 @@ export default function FreteCidade({ cidade, estado, cidadesProximas }) {
             <a href="https://pachego.com.br/orcar-frete/" target="_blank" rel="noopener noreferrer" className="bg-white text-blue-600 font-semibold py-3 px-8 rounded-lg hover:bg-gray-100">
               📞 Solicite um orçamento
             </a>
-            <a href="https://api.whatsapp.com/send?phone=5562991103510&text=Ol%C3%A1!%20vim%20pelo%20site%20gostaria%20de%20saber%20mais%20sobre%20os%20servi%C3%A7os!" target="_blank" rel="noopener noreferrer" className="bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-lg hover:bg-white hover:text-blue-600">
+            <a href="https://api.whatsapp.com/send?phone=62991103510&text=Ol%C3%A1!%20vim%20pelo%20site%20gostaria%20de%20saber%20mais%20sobre%20os%20servi%C3%A7os!" target="_blank" rel="noopener noreferrer" className="bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-lg hover:bg-white hover:text-blue-600">
               💬 Falar conosco
             </a>
           </div>
