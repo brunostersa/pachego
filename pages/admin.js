@@ -521,7 +521,7 @@ _Equipe Pá-chego Fretes_`
                 </div>
               </div>
             </div>
-
+            )}
 
             {/* Lista de Solicitações */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
