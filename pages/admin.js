@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react'
 import Head from 'next/head'
-import Header from '../components/Header'
-import Footer from '../components/Footer'
 import Favicon from '../components/Favicon'
 
 const AdminPage = () => {
@@ -13,6 +11,8 @@ const AdminPage = () => {
   const [solicitacaoParaProposta, setSolicitacaoParaProposta] = useState(null)
   const [propostaGerada, setPropostaGerada] = useState(false)
   const [linkProposta, setLinkProposta] = useState('')
+  const [mostrarDetalhes, setMostrarDetalhes] = useState(false)
+  const [timeline, setTimeline] = useState([])
 
   useEffect(() => {
     // Carregar solicitações do localStorage
@@ -53,6 +53,51 @@ const AdminPage = () => {
     }
   }
 
+  const abrirDetalhes = (solicitacao) => {
+    setSolicitacaoSelecionada(solicitacao)
+    setMostrarDetalhes(true)
+    carregarTimeline(solicitacao.id)
+  }
+
+  const carregarTimeline = (solicitacaoId) => {
+    // Carregar timeline do localStorage ou criar uma inicial
+    const timelineData = localStorage.getItem(`timeline_${solicitacaoId}`)
+    if (timelineData) {
+      setTimeline(JSON.parse(timelineData))
+    } else {
+      // Timeline inicial baseada na solicitação
+      const timelineInicial = [
+        {
+          id: 1,
+          tipo: 'solicitacao',
+          titulo: 'Solicitação Recebida',
+          descricao: 'Cliente enviou solicitação de cotação',
+          data: new Date().toISOString(),
+          status: 'concluido'
+        }
+      ]
+      setTimeline(timelineInicial)
+      localStorage.setItem(`timeline_${solicitacaoId}`, JSON.stringify(timelineInicial))
+    }
+  }
+
+  const adicionarEventoTimeline = (tipo, titulo, descricao) => {
+    if (!solicitacaoSelecionada) return
+
+    const novoEvento = {
+      id: Date.now(),
+      tipo,
+      titulo,
+      descricao,
+      data: new Date().toISOString(),
+      status: 'concluido'
+    }
+
+    const novaTimeline = [...timeline, novoEvento]
+    setTimeline(novaTimeline)
+    localStorage.setItem(`timeline_${solicitacaoSelecionada.id}`, JSON.stringify(novaTimeline))
+  }
+
   const abrirModalProposta = (solicitacao) => {
     setSolicitacaoParaProposta(solicitacao)
     setValorProposta('')
@@ -70,6 +115,10 @@ const AdminPage = () => {
       style: 'currency',
       currency: 'BRL'
     })
+
+    // Gerar ID único para a proposta
+    const propostaId = `proposta_${Date.now()}`
+    const linkPropostaGerado = `${window.location.origin}/proposta/${propostaId}`
 
     const conteudoPDF = `
       <!DOCTYPE html>
@@ -210,8 +259,23 @@ const AdminPage = () => {
     document.body.removeChild(link)
     
     // Salvar o link da proposta para envio via WhatsApp
-    setLinkProposta(url)
+    setLinkProposta(linkPropostaGerado)
     setPropostaGerada(true)
+    
+    // Salvar proposta no localStorage
+    const propostaData = {
+      id: propostaId,
+      solicitacaoId: solicitacaoParaProposta.id,
+      valor: valorProposta,
+      data: new Date().toISOString(),
+      conteudo: conteudoPDF
+    }
+    localStorage.setItem(`proposta_${propostaId}`, JSON.stringify(propostaData))
+    
+    // Adicionar à timeline se estiver na tela de detalhes
+    if (mostrarDetalhes && solicitacaoSelecionada) {
+      adicionarEventoTimeline('proposta', 'Proposta Gerada', `Proposta de ${valorFormatado} criada e link gerado`)
+    }
     
     // Atualizar status
     atualizarStatus(solicitacaoParaProposta.id, 'em_andamento')
@@ -260,6 +324,40 @@ _Equipe Pá-chego Fretes_`
     return encodeURIComponent(mensagem)
   }
 
+  const gerarMensagemWhatsAppCompleta = () => {
+    if (!solicitacaoSelecionada) return ''
+    
+    const valorFormatado = linkProposta ? parseFloat(valorProposta).toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    }) : 'A ser definido'
+
+    const mensagem = `🎉 *Seu orçamento ficou pronto!*
+
+Olá ${solicitacaoSelecionada.nome}! 
+
+Sua solicitação de frete foi analisada e já temos uma proposta personalizada para você:
+
+📋 *RESUMO DO SERVIÇO:*
+• *Origem:* ${solicitacaoSelecionada.origem}
+• *Destino:* ${solicitacaoSelecionada.destino}
+• *Tipo:* ${solicitacaoSelecionada.tipoServico}
+${solicitacaoSelecionada.tamanhoMudanca ? `• *Tamanho:* ${solicitacaoSelecionada.tamanhoMudanca}` : ''}
+${solicitacaoSelecionada.tipoAjudantes ? `• *Ajudantes:* ${solicitacaoSelecionada.tipoAjudantes === 'empresa' ? `${solicitacaoSelecionada.quantidadeAjudantes} da empresa` : 'Próprios'}` : ''}
+
+💰 *VALOR DA PROPOSTA: ${valorFormatado}*
+
+${linkProposta ? `🔗 *ACESSE SUA PROPOSTA COMPLETA:*
+${linkProposta}
+
+` : ''}📞 *DÚVIDAS?* 
+Estamos aqui para ajudar! Responda esta mensagem ou ligue para (62) 99110-3510
+
+_Equipe Pá-chego Fretes_`
+
+    return encodeURIComponent(mensagem)
+  }
+
   const getStatusColor = (status) => {
     switch (status) {
       case 'pendente': return 'bg-yellow-100 text-yellow-800'
@@ -285,143 +383,161 @@ _Equipe Pá-chego Fretes_`
   return (
     <>
       <Head>
-        <title>Administração - Pá-chego Fretes</title>
+        <title>Dashboard - Pá-chego Fretes</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
       <Favicon />
-      <Header />
-
-      <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 py-8">
-        <div className="container mx-auto px-4">
-          <div className="max-w-7xl mx-auto">
-            {/* Header */}
-            <div className="mb-8 text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl mb-4 shadow-lg">
-                <span className="text-2xl">📊</span>
-              </div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-indigo-900 bg-clip-text text-transparent mb-2">
-                Painel Administrativo
-              </h1>
-              <p className="text-lg text-gray-600">Gerencie as solicitações de cotação com eficiência</p>
-            </div>
-
-            {/* Filtros */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-6 mb-8">
-              <div className="flex flex-wrap gap-6 items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <div className="relative">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Filtrar por status</label>
-                    <select
-                      value={filtroStatus}
-                      onChange={(e) => setFiltroStatus(e.target.value)}
-                      className="px-4 py-3 bg-gradient-to-r from-gray-50 to-gray-100 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 font-medium"
-                    >
-                      <option value="todos">🔍 Todos os status</option>
-                      <option value="pendente">⏳ Pendente</option>
-                      <option value="em_andamento">🔄 Em Andamento</option>
-                      <option value="concluida">✅ Concluída</option>
-                      <option value="cancelada">❌ Cancelada</option>
-                    </select>
-                  </div>
+      
+      <div className="min-h-screen bg-gray-50">
+        {/* Dashboard Header */}
+        <header className="bg-white shadow-sm border-b border-gray-200">
+          <div className="px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">P</span>
                 </div>
-                <div className="flex items-center space-x-4">
-                  <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-xl font-semibold shadow-lg">
-                    📊 {solicitacoesFiltradas.length} solicitação(ões)
-                  </div>
-                  <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-xl font-semibold shadow-lg">
-                    💰 {solicitacoes.filter(s => s.status === 'concluida').length} concluídas
-                  </div>
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+                  <p className="text-sm text-gray-500">Pá-chego Fretes</p>
                 </div>
               </div>
+              <div className="flex items-center space-x-4">
+                <a
+                  href="/calculadora"
+                  className="px-4 py-2 text-gray-600 hover:text-gray-900 font-medium transition-colors"
+                >
+                  Calculadora
+                </a>
+                <a
+                  href="https://api.whatsapp.com/send?phone=62991103510&text=Olá!%20vim%20pelo%20dashboard%20gostaria%20de%20ajuda!"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg transition-colors flex items-center space-x-2"
+                >
+                  <span>💬</span>
+                  <span>WhatsApp</span>
+                </a>
+              </div>
             </div>
+          </div>
+        </header>
 
-            {/* Contadores por Status */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-2xl p-6 text-white shadow-lg">
+        <main className="py-8">
+          <div className="container mx-auto px-6">
+            <div className="max-w-7xl mx-auto">
+
+            {/* Dashboard Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-yellow-100 text-sm font-medium">Pendentes</p>
-                    <p className="text-3xl font-bold">{solicitacoes.filter(s => s.status === 'pendente').length}</p>
+                    <p className="text-sm font-medium text-gray-600">Total de Solicitações</p>
+                    <p className="text-3xl font-bold text-gray-900">{solicitacoes.length}</p>
                   </div>
-                  <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <span className="text-2xl">📋</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Pendentes</p>
+                    <p className="text-3xl font-bold text-yellow-600">{solicitacoes.filter(s => s.status === 'pendente').length}</p>
+                  </div>
+                  <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
                     <span className="text-2xl">⏳</span>
                   </div>
                 </div>
               </div>
-
-              <div className="bg-gradient-to-r from-blue-400 to-blue-600 rounded-2xl p-6 text-white shadow-lg">
+              
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-blue-100 text-sm font-medium">Em Andamento</p>
-                    <p className="text-3xl font-bold">{solicitacoes.filter(s => s.status === 'em_andamento').length}</p>
+                    <p className="text-sm font-medium text-gray-600">Em Andamento</p>
+                    <p className="text-3xl font-bold text-blue-600">{solicitacoes.filter(s => s.status === 'em_andamento').length}</p>
                   </div>
-                  <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                     <span className="text-2xl">🔄</span>
                   </div>
                 </div>
               </div>
-
-              <div className="bg-gradient-to-r from-green-400 to-emerald-600 rounded-2xl p-6 text-white shadow-lg">
+              
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-green-100 text-sm font-medium">Concluídas</p>
-                    <p className="text-3xl font-bold">{solicitacoes.filter(s => s.status === 'concluida').length}</p>
+                    <p className="text-sm font-medium text-gray-600">Concluídas</p>
+                    <p className="text-3xl font-bold text-green-600">{solicitacoes.filter(s => s.status === 'concluida').length}</p>
                   </div>
-                  <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
                     <span className="text-2xl">✅</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-gradient-to-r from-red-400 to-red-600 rounded-2xl p-6 text-white shadow-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-red-100 text-sm font-medium">Canceladas</p>
-                    <p className="text-3xl font-bold">{solicitacoes.filter(s => s.status === 'cancelada').length}</p>
-                  </div>
-                  <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                    <span className="text-2xl">❌</span>
                   </div>
                 </div>
               </div>
             </div>
 
+            {/* Filtros */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+              <div className="flex flex-wrap gap-4 items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <label className="text-sm font-semibold text-gray-700">Filtrar por status:</label>
+                  <select 
+                    value={filtroStatus} 
+                    onChange={(e) => setFiltroStatus(e.target.value)}
+                    className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+                  >
+                    <option value="todos">Todos os status</option>
+                    <option value="pendente">Pendente</option>
+                    <option value="em_andamento">Em Andamento</option>
+                    <option value="concluida">Concluída</option>
+                    <option value="cancelada">Cancelada</option>
+                  </select>
+                </div>
+                <div className="text-sm text-gray-500">
+                  Mostrando {solicitacoesFiltradas.length} de {solicitacoes.length} solicitações
+                </div>
+              </div>
+            </div>
+
+
             {/* Lista de Solicitações */}
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
               {solicitacoesFiltradas.length === 0 ? (
                 <div className="p-12 text-center">
-                  <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-gray-100 to-gray-200 rounded-full mb-6">
-                    <span className="text-4xl">📋</span>
+                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span className="text-2xl">📋</span>
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-700 mb-2">Nenhuma solicitação encontrada</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Nenhuma solicitação encontrada</h3>
                   <p className="text-gray-500">Tente ajustar os filtros ou aguarde novas solicitações</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-200/50">
-                    <thead className="bg-gradient-to-r from-slate-50 to-gray-100">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                          👤 Cliente
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Cliente
                         </th>
-                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                          📍 Origem → Destino
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Origem → Destino
                         </th>
-                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                          📅 Data
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Data
                         </th>
-                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                          🏷️ Status
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Status
                         </th>
-                        <th className="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                          ⚡ Ações
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Ações
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white/50 divide-y divide-gray-200/30">
+                    <tbody className="bg-white divide-y divide-gray-200">
                       {solicitacoesFiltradas.map((solicitacao, index) => (
-                        <tr key={solicitacao.id} className="hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-indigo-50/50 transition-all duration-300 group">
+                        <tr key={solicitacao.id} className="hover:bg-gray-50 transition-colors duration-200">
                           <td className="px-6 py-6 whitespace-nowrap">
                             <div className="flex items-center space-x-3">
                               <div className="flex-shrink-0">
@@ -462,7 +578,7 @@ _Equipe Pá-chego Fretes_`
                           <td className="px-6 py-6 whitespace-nowrap">
                             <div className="flex items-center space-x-2">
                               <button
-                                onClick={() => setSolicitacaoSelecionada(solicitacao)}
+                                onClick={() => abrirDetalhes(solicitacao)}
                                 className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs font-semibold rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
                               >
                                 👁️ Ver
@@ -501,10 +617,220 @@ _Equipe Pá-chego Fretes_`
           </div>
         </div>
 
-        {/* Modal de Detalhes */}
-        {solicitacaoSelecionada && (
+        {/* Tela de Detalhes */}
+        {mostrarDetalhes && solicitacaoSelecionada && (
+          <div className="fixed inset-0 bg-white z-50 overflow-y-auto">
+            {/* Header da Tela de Detalhes */}
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-4 shadow-lg">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center space-x-4">
+                  <button
+                    onClick={() => setMostrarDetalhes(false)}
+                    className="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-center text-white transition-all duration-200 hover:scale-110"
+                  >
+                    ←
+                  </button>
+                  <div>
+                    <h2 className="text-2xl font-bold text-white">Detalhes da Solicitação</h2>
+                    <p className="text-blue-100">ID: #{solicitacaoSelecionada.id}</p>
+                  </div>
+                </div>
+                <div className="flex space-x-3">
+                  <button
+                    onClick={() => abrirModalProposta(solicitacaoSelecionada)}
+                    className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition-all duration-200"
+                  >
+                    Gerar Proposta
+                  </button>
+                  <button
+                    onClick={() => setMostrarDetalhes(false)}
+                    className="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-center text-white transition-all duration-200"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 max-w-7xl mx-auto">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Coluna 1: Dados do Cliente */}
+                <div className="space-y-6">
+                  {/* Dados Básicos */}
+                  <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                    <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                      <span className="text-2xl mr-3">👤</span>
+                      Dados do Cliente
+                    </h3>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="text-sm font-semibold text-gray-600">Nome</label>
+                        <p className="text-gray-900 font-medium">{solicitacaoSelecionada.nome}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-semibold text-gray-600">Celular</label>
+                        <p className="text-gray-900 font-medium">{solicitacaoSelecionada.celular}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-semibold text-gray-600">Data da Solicitação</label>
+                        <p className="text-gray-900 font-medium">{solicitacaoSelecionada.data}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-semibold text-gray-600">Data Desejada</label>
+                        <p className="text-gray-900 font-medium">{solicitacaoSelecionada.dataDesejada || 'Não informada'}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Coluna 2: Detalhes do Frete */}
+                <div className="space-y-6">
+                  {/* Detalhes do Frete */}
+                  <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                    <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                      <span className="text-2xl mr-3">🚚</span>
+                      Detalhes do Frete
+                    </h3>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="text-sm font-semibold text-gray-600">Origem</label>
+                        <p className="text-gray-900 font-medium">{solicitacaoSelecionada.origem}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-semibold text-gray-600">Destino</label>
+                        <p className="text-gray-900 font-medium">{solicitacaoSelecionada.destino}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-semibold text-gray-600">Tipo de Serviço</label>
+                        <p className="text-gray-900 font-medium">{solicitacaoSelecionada.tipoServico}</p>
+                      </div>
+                      {solicitacaoSelecionada.tamanhoMudanca && (
+                        <div>
+                          <label className="text-sm font-semibold text-gray-600">Tamanho da Mudança</label>
+                          <p className="text-gray-900 font-medium">{solicitacaoSelecionada.tamanhoMudanca}</p>
+                        </div>
+                      )}
+                      {solicitacaoSelecionada.tipoAjudantes && (
+                        <div>
+                          <label className="text-sm font-semibold text-gray-600">Ajudantes</label>
+                          <p className="text-gray-900 font-medium">
+                            {solicitacaoSelecionada.tipoAjudantes === 'empresa' 
+                              ? `${solicitacaoSelecionada.quantidadeAjudantes} da empresa`
+                              : 'Próprios'
+                            }
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Observações */}
+                  {solicitacaoSelecionada.observacoes && (
+                    <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                      <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                        <span className="text-2xl mr-3">📝</span>
+                        Observações
+                      </h3>
+                      <p className="text-gray-700 bg-gray-50 p-4 rounded-lg">{solicitacaoSelecionada.observacoes}</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Coluna 3: Timeline e Links */}
+                <div className="space-y-6">
+                  <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                    <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                      <span className="text-2xl mr-3">⏰</span>
+                      Timeline de Contato
+                    </h3>
+                    
+                    <div className="space-y-4">
+                      {timeline.map((evento, index) => (
+                        <div key={evento.id} className="relative">
+                          {index < timeline.length - 1 && (
+                            <div className="absolute left-4 top-8 w-0.5 h-8 bg-gray-200"></div>
+                          )}
+                          <div className="flex items-start space-x-3">
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                              evento.tipo === 'solicitacao' ? 'bg-blue-100 text-blue-600' :
+                              evento.tipo === 'proposta' ? 'bg-green-100 text-green-600' :
+                              evento.tipo === 'contato' ? 'bg-yellow-100 text-yellow-600' :
+                              'bg-gray-100 text-gray-600'
+                            }`}>
+                              {evento.tipo === 'solicitacao' ? '📋' :
+                               evento.tipo === 'proposta' ? '💰' :
+                               evento.tipo === 'contato' ? '📞' : '📌'}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h4 className="text-sm font-semibold text-gray-900">{evento.titulo}</h4>
+                              <p className="text-sm text-gray-600 mt-1">{evento.descricao}</p>
+                              <p className="text-xs text-gray-500 mt-1">
+                                {new Date(evento.data).toLocaleString('pt-BR')}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Botão para adicionar evento */}
+                    <div className="mt-6 pt-4 border-t border-gray-200">
+                      <button
+                        onClick={() => {
+                          const titulo = prompt('Título do evento:')
+                          const descricao = prompt('Descrição:')
+                          if (titulo && descricao) {
+                            adicionarEventoTimeline('contato', titulo, descricao)
+                          }
+                        }}
+                        className="w-full px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-all duration-200"
+                      >
+                        + Adicionar Evento
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Link da Proposta */}
+                  {linkProposta && (
+                    <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                      <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                        <span className="text-2xl mr-3">🔗</span>
+                        Link da Proposta
+                      </h3>
+                      <div className="space-y-3">
+                        <div className="bg-gray-50 p-3 rounded-lg">
+                          <p className="text-sm text-gray-600 mb-2">Link gerado:</p>
+                          <p className="text-sm font-mono text-blue-600 break-all">{linkProposta}</p>
+                        </div>
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={() => navigator.clipboard.writeText(linkProposta)}
+                            className="flex-1 px-3 py-2 bg-gray-500 hover:bg-gray-600 text-white text-sm font-semibold rounded-lg transition-all duration-200"
+                          >
+                            Copiar Link
+                          </button>
+                          <a
+                            href={`https://api.whatsapp.com/send?phone=${solicitacaoSelecionada.celular.replace(/\D/g, '')}&text=${encodeURIComponent(gerarMensagemWhatsAppCompleta())}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1 px-3 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold rounded-lg transition-all duration-200 text-center"
+                          >
+                            Enviar WhatsApp
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal de Proposta (mantido para compatibilidade) */}
+        {mostrarModalProposta && solicitacaoParaProposta && (
           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
-            <div className="relative w-full max-w-5xl max-h-[90vh] bg-white rounded-3xl shadow-2xl border border-white/20 overflow-hidden animate-in fade-in-0 zoom-in-95 duration-300">
+            <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-white/20 overflow-hidden animate-in fade-in-0 zoom-in-95 duration-300">
               <div className="bg-gradient-to-r from-blue-600 to-indigo-700 px-8 py-6">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center space-x-4">
@@ -756,9 +1082,8 @@ _Equipe Pá-chego Fretes_`
             </div>
           </div>
         )}
-      </main>
-
-      <Footer />
+        </main>
+      </div>
     </>
   )
 }

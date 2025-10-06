@@ -301,7 +301,7 @@ const CalculadoraSimples = () => {
         <div className="space-y-6 sm:space-y-8">
           {/* Seletor de Tipo de Serviço */}
           <div>
-            <div className="text-center mb-6 sm:mb-8">
+            <div className="text-center mb-6 sm:mb-8 pt-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 px-2">⚙️ Escolha o tipo de serviço</h2>
               <p className="text-gray-600 text-sm sm:text-base px-4">Selecione o serviço que melhor atende sua necessidade</p>
             </div>
@@ -383,6 +383,11 @@ const CalculadoraSimples = () => {
           {/* Timeline */}
           <div className="mb-6 sm:mb-8">
             <div className="flex items-center justify-between relative px-2">
+              {/* Linha inicial antes do primeiro círculo */}
+              <div className={`absolute top-5 sm:top-6 left-0 h-0.5 w-1/2 ${
+                etapaAtual > 1 ? 'bg-blue-500' : 'bg-gray-300'
+              }`} style={{zIndex: -1}} />
+              
               {etapas.map((etapa, index) => (
                 <div key={etapa.numero} className="flex flex-col items-center relative z-10 flex-1">
                   <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-lg transition-all duration-300 ${
@@ -401,12 +406,17 @@ const CalculadoraSimples = () => {
                     <p className="text-xs text-gray-500 mt-1 hidden sm:block">{etapa.descricao}</p>
                   </div>
                   {index < etapas.length - 1 && (
-                    <div className={`absolute top-5 sm:top-6 left-1/2 w-full h-0.5 ${
+                    <div className={`absolute top-5 sm:top-6 left-1/2 h-0.5 ${
                       etapaAtual > etapa.numero ? 'bg-blue-500' : 'bg-gray-300'
-                    }`} style={{width: 'calc(100% - 2.5rem)', transform: 'translateX(50%)', zIndex: -1}} />
+                    }`} style={{width: 'calc(100% - 1.25rem)', transform: 'translateX(50%)', zIndex: -1}} />
                   )}
                 </div>
               ))}
+              
+              {/* Linha final após o último círculo */}
+              <div className={`absolute top-5 sm:top-6 right-0 h-0.5 w-1/2 ${
+                etapaAtual >= etapas.length ? 'bg-blue-500' : 'bg-gray-300'
+              }`} style={{zIndex: -1}} />
             </div>
           </div>
 
