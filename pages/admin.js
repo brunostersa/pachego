@@ -868,6 +868,45 @@ _Equipe Pá-chego Fretes_`
                                   minute: '2-digit'
                                 })}
                               </p>
+                              
+                              {/* Link da Proposta integrado na timeline */}
+                              {evento.tipo === 'proposta' && linkProposta && (
+                                <div className="mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex-1 min-w-0">
+                                      <p className="text-xs text-gray-500 mb-1">Link da proposta:</p>
+                                      <p className="text-xs font-mono text-blue-600 truncate">{linkProposta}</p>
+                                    </div>
+                                    <div className="flex space-x-2 ml-3">
+                                      <button
+                                        onClick={() => navigator.clipboard.writeText(linkProposta)}
+                                        className="p-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-all duration-200"
+                                        title="Copiar link"
+                                      >
+                                        📋
+                                      </button>
+                                      <a
+                                        href={linkProposta}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-200"
+                                        title="Abrir link"
+                                      >
+                                        🔗
+                                      </a>
+                                      <a
+                                        href={`https://api.whatsapp.com/send?phone=${solicitacaoSelecionada.celular.replace(/\D/g, '')}&text=${encodeURIComponent(gerarMensagemWhatsAppCompleta())}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="p-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-all duration-200"
+                                        title="Enviar WhatsApp"
+                                      >
+                                        📱
+                                      </a>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -891,37 +930,6 @@ _Equipe Pá-chego Fretes_`
                     </div>
                   </div>
 
-                  {/* Link da Proposta */}
-                  {linkProposta && (
-                    <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-                      <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                        <span className="text-2xl mr-3">🔗</span>
-                        Link da Proposta
-                      </h3>
-                      <div className="space-y-3">
-                        <div className="bg-gray-50 p-3 rounded-lg">
-                          <p className="text-sm text-gray-600 mb-2">Link gerado:</p>
-                          <p className="text-sm font-mono text-blue-600 break-all">{linkProposta}</p>
-                        </div>
-                        <div className="flex space-x-2">
-                          <button
-                            onClick={() => navigator.clipboard.writeText(linkProposta)}
-                            className="flex-1 px-3 py-2 bg-gray-500 hover:bg-gray-600 text-white text-sm font-semibold rounded-lg transition-all duration-200"
-                          >
-                            Copiar Link
-                          </button>
-                          <a
-                            href={`https://api.whatsapp.com/send?phone=${solicitacaoSelecionada.celular.replace(/\D/g, '')}&text=${encodeURIComponent(gerarMensagemWhatsAppCompleta())}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex-1 px-3 py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold rounded-lg transition-all duration-200 text-center"
-                          >
-                            Enviar WhatsApp
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
