@@ -132,9 +132,8 @@ const AdminPage = () => {
   }
 
   const abrirDetalhes = (solicitacao) => {
-    setSolicitacaoSelecionada(solicitacao)
-    setMostrarDetalhes(true)
-    carregarTimeline(solicitacao.id)
+    // Navegar para a URL da solicitação
+    window.location.href = `/admin/solicitacao/${solicitacao.id}`
   }
 
   const carregarTimeline = (solicitacaoId) => {
@@ -753,8 +752,8 @@ _Equipe Pá-chego Fretes_`
           </div>
         </div>
 
-        {/* Tela de Detalhes */}
-        {mostrarDetalhes && solicitacaoSelecionada && (
+        {/* Tela de Detalhes - Removida, agora usa URL própria */}
+        {false && (
           <div className="fixed inset-0 bg-white z-50 overflow-y-auto">
             {/* Header da Tela de Detalhes */}
             <div className="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-4 shadow-lg">
