@@ -184,6 +184,33 @@ const AdminPage = () => {
     setMostrarModalProposta(true)
   }
 
+  const gerarLinkProposta = (solicitacao, valor = 0) => {
+    // Gerar ID único para a proposta
+    const propostaId = `proposta_${Date.now()}`
+    const linkPropostaGerado = `${window.location.origin}/proposta/${propostaId}`
+    
+    // Criar dados da proposta
+    const propostaData = {
+      id: propostaId,
+      data: new Date().toISOString(),
+      valor: valor,
+      solicitacao: {
+        nome: solicitacao.nome || 'Nome não informado',
+        celular: solicitacao.celular || 'Celular não informado',
+        origem: solicitacao.origem || 'Origem não informada',
+        destino: solicitacao.destino || 'Destino não informado',
+        tipoServico: solicitacao.tipoServico || 'Serviço não informado',
+        data: solicitacao.data || new Date().toISOString(),
+        observacoes: solicitacao.observacoes || ''
+      }
+    }
+    
+    // Salvar no localStorage
+    localStorage.setItem(`proposta_${propostaId}`, JSON.stringify(propostaData))
+    
+    return { link: linkPropostaGerado, propostaData }
+  }
+
   const gerarPDF = () => {
     if (!valorProposta || !solicitacaoParaProposta) return
 
@@ -194,9 +221,8 @@ const AdminPage = () => {
       currency: 'BRL'
     })
 
-    // Gerar ID único para a proposta
-    const propostaId = `proposta_${Date.now()}`
-    const linkPropostaGerado = `${window.location.origin}/proposta/${propostaId}`
+    // Gerar link da proposta
+    const { link: linkPropostaGerado } = gerarLinkProposta(solicitacaoParaProposta, parseFloat(valorProposta))
 
     const conteudoPDF = `
       <!DOCTYPE html>
@@ -683,6 +709,21 @@ _Equipe Pá-chego Fretes_`
                                 className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs font-semibold rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
                               >
                                 📄 Proposta
+                              </button>
+                              <button
+                                onClick={() => {
+                                  const { link } = gerarLinkProposta(solicitacao, 0)
+                                  navigator.clipboard.writeText(link)
+                                  
+                                  // Adicionar evento na timeline
+                                  adicionarEventoTimeline('proposta', 'Link Gerado', `Link da proposta gerado e copiado para área de transferência`)
+                                  
+                                  alert('Link gerado e copiado para a área de transferência!')
+                                }}
+                                className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-purple-500 to-purple-600 text-white text-xs font-semibold rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                                title="Gerar link da proposta"
+                              >
+                                🔗 Link
                               </button>
                               <select
                                 value={solicitacao.status}
