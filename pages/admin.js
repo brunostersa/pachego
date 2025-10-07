@@ -656,7 +656,13 @@ _Equipe Pá-chego Fretes_`
                           </td>
                           <td className="px-6 py-6 whitespace-nowrap">
                             <div className="text-sm text-gray-500 font-medium">
-                              {solicitacao.data}
+                              {new Date(solicitacao.data).toLocaleDateString('pt-BR', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
                             </div>
                           </td>
                           <td className="px-6 py-6 whitespace-nowrap">
@@ -854,7 +860,13 @@ _Equipe Pá-chego Fretes_`
                               <h4 className="text-sm font-semibold text-gray-900">{evento.titulo}</h4>
                               <p className="text-sm text-gray-600 mt-1">{evento.descricao}</p>
                               <p className="text-xs text-gray-500 mt-1">
-                                {new Date(evento.data).toLocaleString('pt-BR')}
+                                {new Date(evento.data).toLocaleDateString('pt-BR', {
+                                  day: '2-digit',
+                                  month: '2-digit',
+                                  year: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
                               </p>
                             </div>
                           </div>

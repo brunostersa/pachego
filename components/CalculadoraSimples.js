@@ -812,8 +812,14 @@ const CalculadoraSimples = () => {
                   value={dataDesejada}
                   onChange={(e) => setDataDesejada(e.target.value)}
                   min={new Date().toISOString().split('T')[0]}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none transition-colors bg-gray-50 focus:bg-white shadow-sm"
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none transition-colors bg-gray-50 focus:bg-white shadow-sm text-base sm:text-sm"
+                  style={{
+                    fontSize: '16px', // Evita zoom no iOS
+                    WebkitAppearance: 'none',
+                    MozAppearance: 'textfield'
+                  }}
                 />
+                <p className="text-xs text-gray-500 mt-1">Selecione a data desejada para o serviço</p>
               </div>
             </div>
 
