@@ -809,7 +809,15 @@ _Equipe Pá-chego Fretes_`
                       </div>
                       <div>
                         <label className="text-sm font-semibold text-gray-600">Data da Solicitação</label>
-                        <p className="text-gray-900 font-medium">{solicitacaoSelecionada.data}</p>
+                        <p className="text-gray-900 font-medium">
+                          {new Date(solicitacaoSelecionada.data).toLocaleDateString('pt-BR', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </p>
                       </div>
                       <div>
                         <label className="text-sm font-semibold text-gray-600">Data Desejada</label>
