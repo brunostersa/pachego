@@ -72,7 +72,7 @@ NEXT_PUBLIC_SITE_URL=https://pachego.com.br
 ## 📱 Páginas
 
 - **/** - Página inicial
-- **/calculadora** - Calculadora de frete
+- **/form** - Calculadora de frete
 - **/admin** - Painel administrativo
 - **/api/calcular-distancia** - API de cálculo de distância
 - **/api/buscar-lugares** - API de busca de lugares

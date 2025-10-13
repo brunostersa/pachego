@@ -27,7 +27,7 @@ export default function Header() {
               Início
             </a>
             <a 
-              href="/calculadora" 
+              href="/form" 
               className="text-gray-300 hover:text-white font-medium transition duration-300"
             >
               🧮 Calculadora
@@ -89,7 +89,7 @@ export default function Header() {
                 Início
               </a>
               <a 
-                href="/calculadora" 
+                href="/form" 
                 className="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md transition duration-300"
                 onClick={() => setIsMenuOpen(false)}
               >
