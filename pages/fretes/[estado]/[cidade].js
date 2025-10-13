@@ -322,7 +322,7 @@ export default function FreteCidade({ cidade, estado, cidadesProximas }) {
           <h2 className="text-2xl font-bold mb-4">Precisa de serviços de frete em {cidade}?</h2>
           <p className="text-lg mb-6">Solicite um orçamento rápido e veja por que somos referência em transporte seguro.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="https://pachego.com.br/orcar-frete/" target="_blank" rel="noopener noreferrer" className="bg-white text-blue-600 font-semibold py-3 px-8 rounded-lg hover:bg-gray-100">
+            <a href="/form" className="bg-white text-blue-600 font-semibold py-3 px-8 rounded-lg hover:bg-gray-100">
               📞 Solicite um orçamento
             </a>
             <a href="https://api.whatsapp.com/send?phone=62991103510&text=Ol%C3%A1!%20vim%20pelo%20site%20gostaria%20de%20saber%20mais%20sobre%20os%20servi%C3%A7os!" target="_blank" rel="noopener noreferrer" className="bg-transparent border-2 border-white text-white font-semibold py-3 px-8 rounded-lg hover:bg-white hover:text-blue-600">

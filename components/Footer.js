@@ -60,9 +60,7 @@ export default function Footer() {
             
             <div className="mt-6">
               <a 
-                href="https://pachego.com.br/orcar-frete/"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="/form"
                 className="inline-block bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300"
               >
                 Solicitar Orçamento

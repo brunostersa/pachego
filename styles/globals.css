@@ -5,3 +5,88 @@
 body {
   @apply bg-white text-black font-sans;
 }
+
+/* Melhorias para o campo de data no mobile */
+input[type="date"] {
+  position: relative;
+  display: block;
+  width: 100%;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  line-height: 1.5;
+}
+
+/* Torna o campo inteiro clicável no mobile */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  color: transparent;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0;
+  z-index: 10;
+}
+
+/* Firefox */
+input[type="date"]::-moz-calendar-picker-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  color: transparent;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0;
+  z-index: 10;
+}
+
+input[type="date"]::-webkit-datetime-edit {
+  padding: 0;
+  display: flex;
+  align-items: center;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+input[type="date"]::-webkit-datetime-edit-text {
+  padding: 0 0.25em;
+  color: currentColor;
+}
+
+input[type="date"]::-webkit-datetime-edit-month-field,
+input[type="date"]::-webkit-datetime-edit-day-field,
+input[type="date"]::-webkit-datetime-edit-year-field {
+  padding: 0 0.25em;
+  font-weight: 500;
+  color: currentColor;
+}
+
+/* Cores melhoradas para os campos de data */
+input[type="date"]::-webkit-datetime-edit-month-field:focus,
+input[type="date"]::-webkit-datetime-edit-day-field:focus,
+input[type="date"]::-webkit-datetime-edit-year-field:focus {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #1F2937;
+  outline: none;
+  border-radius: 2px;
+}
+
+/* Remove destaque padrão no iOS */
+input[type="date"]:focus {
+  -webkit-tap-highlight-color: transparent;
+}

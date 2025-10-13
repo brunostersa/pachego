@@ -771,9 +771,7 @@ const FreteCalculator = () => {
 
           <div className="mt-4 flex gap-3">
             <a
-              href="https://pachego.com.br/orcar-frete/"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/form"
               className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg text-center font-semibold hover:bg-green-700 transition duration-300"
             >
               📋 Solicitar Orçamento Oficial

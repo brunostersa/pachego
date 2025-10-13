@@ -64,14 +64,12 @@ export default function Home() {
               Aparecida de Goiânia e região. +25 anos de experiência com equipe confiável.
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-                              <a 
-                  href="https://pachego.com.br/orcar-frete/" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-10 rounded-xl transition duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 text-lg"
-                >
-                  📞 Solicite um orçamento
-                </a>
+              <a 
+                href="/form" 
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-10 rounded-xl transition duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 text-lg"
+              >
+                📞 Solicite um orçamento
+              </a>
               <a 
                 href="https://api.whatsapp.com/send?phone=62991103510&text=Ol%C3%A1!%20vim%20pelo%20site%20gostaria%20de%20saber%20mais%20sobre%20os%20servi%C3%A7os!" 
                 target="_blank" 
@@ -282,10 +280,8 @@ export default function Home() {
             Entre em contato conosco e solicite seu orçamento gratuito!
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <a 
-              href="https://pachego.com.br/orcar-frete/"  
-              target="_blank" 
-              rel="noopener noreferrer"
+            <a 
+              href="/form"
               className="bg-white text-blue-600 font-semibold py-3 px-8 rounded-lg transition duration-300 hover:bg-gray-100"
             >
               💬 Solicitar Orçamento

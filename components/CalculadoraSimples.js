@@ -70,6 +70,25 @@ const CalculadoraSimples = () => {
     }
   }
 
+  const handleDataDesejadaChange = (e) => {
+    const dataSelecionada = e.target.value
+    const hoje = new Date().toISOString().split('T')[0]
+    
+    // Limpar erro anterior
+    if (erros.dataDesejada) {
+      setErros(prev => ({ ...prev, dataDesejada: null }))
+    }
+    
+    // Validar se a data é no futuro ou hoje
+    if (dataSelecionada && dataSelecionada < hoje) {
+      setErros(prev => ({ ...prev, dataDesejada: 'A data não pode ser no passado' }))
+      setDataDesejada('')
+      return
+    }
+    
+    setDataDesejada(dataSelecionada)
+  }
+
 
   const enviarCotacao = async () => {
     // Limpar erros anteriores
@@ -78,6 +97,16 @@ const CalculadoraSimples = () => {
     // Validar todas as etapas
     if (!validarEtapa1() || !validarEtapa3()) {
       return
+    }
+
+    // Validar data desejada se foi informada
+    if (dataDesejada) {
+      const hoje = new Date().toISOString().split('T')[0]
+      if (dataDesejada < hoje) {
+        setErros({ dataDesejada: 'A data não pode ser no passado' })
+        setEtapaAtual(2) // Volta para a etapa onde está a data
+        return
+      }
     }
 
     // Criar objeto com os dados da solicitação
@@ -102,6 +131,28 @@ const CalculadoraSimples = () => {
       observacao,
       status: 'pendente'
     }
+
+        // Gerar ID único para a solicitação
+        const solicitacaoId = `solicitacao_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+        
+        // Adicionar ID à solicitação
+        solicitacao.id = solicitacaoId
+        
+        // Criar proposta provisória com status "em_analise"
+        const propostaProvisoria = {
+          id: `proposta_${solicitacaoId.split('_')[1]}`,
+          data: new Date().toISOString(),
+          solicitacao: solicitacao,
+          valor: 0, // Valor será definido pelo admin
+          status: 'em_analise',
+          observacoes: 'Proposta em análise. Aguarde o contato da nossa equipe.'
+        }
+        
+        // Salvar proposta provisória no localStorage para acesso imediato
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(`proposta_${propostaProvisoria.id}`, JSON.stringify(propostaProvisoria))
+          console.log('💾 Proposta provisória salva no localStorage')
+        }
 
         // Salvar no Firebase Firestore
         try {
@@ -134,7 +185,10 @@ const CalculadoraSimples = () => {
           }
         }
 
-        setResultado(solicitacao)
+        setResultado({
+          ...solicitacao,
+          linkProvisorio: `/proposta/${propostaProvisoria.id}`
+        })
         setMostrarTelaSucesso(true)
   }
 
@@ -143,12 +197,12 @@ const CalculadoraSimples = () => {
   const [servicoSelecionado, setServicoSelecionado] = useState(false)
 
   const tiposServico = [
-    { id: 'mudanca', nome: 'Mudança', icone: '📦', descricao: 'Mudança residencial ou comercial' },
-    { id: 'frete-itens', nome: 'Frete de itens', icone: '📋', descricao: 'Transporte de mercadorias' },
-    { id: 'guincho-munck', nome: 'Caminhão Guincho Munck', icone: '🏗️', descricao: 'Içamento de itens personalizados' },
-    { id: 'aberto', nome: 'Caminhão aberto', icone: '🚚', descricao: 'Carga seca e volumosa' },
-    { id: 'bau-rampa', nome: 'Caminhão baú com Rampa', icone: '📦', descricao: 'Carga protegida com facilidade' },
-    { id: 'carreta', nome: 'Transporte com carreta', icone: '🚛', descricao: 'Cargas grandes e pesadas' }
+    { id: 'mudanca', nome: 'Mudança', icone: '📦', descricao: 'Residencial ou comercial' },
+    { id: 'frete-itens', nome: 'Frete de itens', icone: '📋', descricao: 'Mercadorias em geral' },
+    { id: 'guincho-munck', nome: 'Caminhão Guincho Munck', icone: '🏗️', descricao: 'Içamento especializado' },
+    { id: 'aberto', nome: 'Caminhão aberto', icone: '🚚', descricao: 'Cargas secas e volumosas' },
+    { id: 'bau-rampa', nome: 'Caminhão baú com Rampa', icone: '📦', descricao: 'Carga protegida' },
+    { id: 'carreta', nome: 'Transporte com carreta', icone: '🚛', descricao: 'Grandes volumes' }
   ]
 
   const etapas = [
@@ -255,9 +309,49 @@ const CalculadoraSimples = () => {
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
             Solicitação Enviada!
           </h2>
-          <p className="text-gray-600 mb-8 text-sm sm:text-base max-w-md mx-auto">
+          <p className="text-gray-600 mb-6 text-sm sm:text-base max-w-md mx-auto">
             Recebemos sua solicitação de cotação. Em breve entraremos em contato com o orçamento personalizado.
           </p>
+          
+          {/* Link Provisório */}
+          {resultado?.linkProvisorio && (
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6 max-w-lg mx-auto">
+              <div className="flex items-center mb-2">
+                <span className="text-blue-600 mr-2">🔗</span>
+                <h3 className="font-semibold text-blue-800">Acompanhe sua cotação</h3>
+              </div>
+              <p className="text-sm text-blue-700 mb-3">
+                Você pode acompanhar o status da sua solicitação através do link abaixo:
+              </p>
+              <div className="bg-white p-3 rounded-lg border border-blue-300">
+                <p className="text-xs text-gray-600 mb-1">Link de acompanhamento:</p>
+                <p className="font-mono text-sm text-blue-600 break-all">
+                  {typeof window !== 'undefined' ? `${window.location.origin}${resultado.linkProvisorio}` : resultado.linkProvisorio}
+                </p>
+              </div>
+              <div className="mt-3 flex flex-col sm:flex-row gap-2">
+                <button
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      navigator.clipboard.writeText(`${window.location.origin}${resultado.linkProvisorio}`)
+                      alert('Link copiado para a área de transferência!')
+                    }
+                  }}
+                  className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm flex items-center justify-center"
+                >
+                  📋 Copiar Link
+                </button>
+                <a
+                  href={resultado.linkProvisorio}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm flex items-center justify-center"
+                >
+                  👁️ Abrir Agora
+                </a>
+              </div>
+            </div>
+          )}
           
           {/* Resumo da Solicitação */}
           <div className="bg-gray-50 rounded-xl p-6 mb-8 text-left max-w-lg mx-auto">
@@ -352,12 +446,12 @@ const CalculadoraSimples = () => {
                     className="hidden"
                   />
                   <div className="flex items-center w-full">
-                    <div className="text-3xl sm:text-4xl mr-4">{servico.icone}</div>
-                    <div className="flex-1">
-                      <div className="font-semibold text-gray-900 text-base sm:text-lg mb-1">{servico.nome}</div>
-                      <div className="text-sm text-gray-600">{servico.descricao}</div>
+                    <div className="text-3xl sm:text-4xl mr-3 sm:mr-4 flex-shrink-0">{servico.icone}</div>
+                    <div className="flex-1 min-w-0 mr-3">
+                      <div className="font-semibold text-gray-900 text-base sm:text-lg mb-0.5 leading-tight">{servico.nome}</div>
+                      <div className="text-xs sm:text-sm text-gray-600 whitespace-nowrap overflow-hidden text-ellipsis">{servico.descricao}</div>
                     </div>
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                    <div className={`w-5 h-5 flex-shrink-0 rounded-full border-2 flex items-center justify-center ${
                       tipoServico === servico.id
                         ? 'border-blue-500 bg-blue-500'
                         : 'border-gray-300'
@@ -807,19 +901,44 @@ const CalculadoraSimples = () => {
               {/* Data Desejada */}
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 border-b border-gray-200 pb-2 mb-4">📅 Data desejada</h3>
-                <input
-                  type="date"
-                  value={dataDesejada}
-                  onChange={(e) => setDataDesejada(e.target.value)}
-                  min={new Date().toISOString().split('T')[0]}
-                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none transition-colors bg-gray-50 focus:bg-white shadow-sm text-base sm:text-sm"
-                  style={{
-                    fontSize: '16px', // Evita zoom no iOS
-                    WebkitAppearance: 'none',
-                    MozAppearance: 'textfield'
-                  }}
-                />
-                <p className="text-xs text-gray-500 mt-1">Selecione a data desejada para o serviço</p>
+                <div className="relative">
+                  {/* Placeholder customizado quando não há data selecionada */}
+                  {!dataDesejada && (
+                    <div className="absolute left-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400 text-base">
+                      Clique para selecionar uma data
+                    </div>
+                  )}
+                  <input
+                    type="date"
+                    value={dataDesejada}
+                    onChange={handleDataDesejadaChange}
+                    min={new Date().toISOString().split('T')[0]}
+                    className={`w-full px-4 py-3.5 border-2 rounded-xl focus:outline-none transition-colors shadow-sm cursor-pointer ${
+                      erros.dataDesejada 
+                        ? 'border-red-500 bg-red-50 focus:bg-red-50 focus:border-red-500' 
+                        : 'border-gray-300 bg-gray-50 focus:bg-white focus:border-blue-500'
+                    } ${!dataDesejada ? 'text-transparent' : 'text-gray-900'}`}
+                    style={{
+                      fontSize: '16px',
+                      minHeight: '48px',
+                      WebkitAppearance: 'none',
+                      MozAppearance: 'none',
+                      appearance: 'none',
+                      colorScheme: 'light'
+                    }}
+                  />
+                  {/* Ícone de calendário customizado para melhor UX */}
+                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                </div>
+                {erros.dataDesejada ? (
+                  <p className="text-xs text-red-600 mt-2 font-medium">{erros.dataDesejada}</p>
+                ) : (
+                  <p className="text-xs text-gray-500 mt-2">Selecione a data desejada para o serviço (opcional)</p>
+                )}
               </div>
             </div>
 

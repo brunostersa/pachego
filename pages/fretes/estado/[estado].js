@@ -132,14 +132,12 @@ export default function FreteEstado({ estado, cidades }) {
           <p className="text-lg mb-6 opacity-90">
             Entre em contato conosco e solicite seu orçamento gratuito!
           </p>
-                      <a 
-              href="https://pachego.com.br/orcar-frete/"
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="bg-white text-blue-600 font-semibold py-3 px-8 rounded-lg transition duration-300 hover:bg-gray-100 inline-block"
-            >
-              💬 Solicitar Orçamento
-            </a>
+          <a 
+            href="/form"
+            className="bg-white text-blue-600 font-semibold py-3 px-8 rounded-lg transition duration-300 hover:bg-gray-100 inline-block"
+          >
+            💬 Solicitar Orçamento
+          </a>
         </div>
       </main>
 

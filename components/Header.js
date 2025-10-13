@@ -33,9 +33,7 @@ export default function Header() {
               🧮 Calculadora
             </a>
             <a 
-              href="https://pachego.com.br/orcar-frete/" 
-              target="_blank" 
-              rel="noopener noreferrer"
+              href="/form"
               className="text-gray-300 hover:text-white font-medium transition duration-300"
             >
               Orçamento
@@ -59,9 +57,7 @@ export default function Header() {
             
             {/* Botão Orçamento */}
             <a 
-              href="https://pachego.com.br/orcar-frete/" 
-              target="_blank" 
-              rel="noopener noreferrer"
+              href="/form"
               className="bg-white text-black px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition duration-300 shadow-sm hover:shadow-md"
             >
               Orçamento Rápido
@@ -100,9 +96,7 @@ export default function Header() {
                 🧮 Calculadora
               </a>
               <a 
-                href="https://pachego.com.br/orcar-frete/" 
-                target="_blank" 
-                rel="noopener noreferrer"
+                href="/form"
                 className="block px-3 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md transition duration-300"
                 onClick={() => setIsMenuOpen(false)}
               >

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Favicon from '../components/Favicon'
 import { buscarSolicitacoes, atualizarStatus, excluirSolicitacao, escutarSolicitacoes } from '../lib/solicitacoes'
+import { db } from '../lib/firebase'
 
 const AdminPage = () => {
   const [solicitacoes, setSolicitacoes] = useState([])
@@ -55,6 +56,18 @@ const AdminPage = () => {
       console.log('🔄 LISTENER FIREBASE ATIVADO!')
       console.log('📊 Novas solicitações recebidas:', novasSolicitacoes.length)
       console.log('📋 IDs das solicitações:', novasSolicitacoes.map(s => s.id))
+      
+      // Verificar se houve mudança no número de solicitações
+      const diferenca = solicitacoes.length - novasSolicitacoes.length
+      if (diferenca > 0) {
+        console.log(`📉 ${diferenca} solicitação(ões) removida(s)`)
+        console.log('🗑️ Solicitações removidas:', solicitacoes.filter(s => !novasSolicitacoes.find(ns => ns.id === s.id)).map(s => s.id))
+      } else if (diferenca < 0) {
+        console.log(`📈 ${Math.abs(diferenca)} solicitação(ões) adicionada(s)`)
+      } else {
+        console.log('📊 Número de solicitações mantido')
+      }
+      
       setSolicitacoes(novasSolicitacoes)
     })
     
@@ -92,7 +105,14 @@ const AdminPage = () => {
   }
 
   const excluirSolicitacaoSolicitacao = async (id) => {
+    console.log('🚀 INICIANDO EXCLUSÃO...')
+    console.log('ID recebido:', id)
+    console.log('Firebase conectado:', !!db)
+    console.log('🔍 ID específico:', id)
+    
     if (confirm('Tem certeza que deseja excluir esta solicitação?')) {
+      console.log('✅ Usuário confirmou exclusão')
+      
       try {
         console.log('🗑️ EXCLUINDO SOLICITAÇÃO')
         console.log('ID original:', id, 'Tipo:', typeof id)
@@ -106,17 +126,36 @@ const AdminPage = () => {
         }
         
         // Converter ID para string se necessário
-        const idString = String(id)
+        const idString = String(id).trim()
         console.log('ID convertido para string:', idString)
+        console.log('🔍 ID sendo processado:', idString)
+        console.log('🔍 Este é o ID real do Firebase:', idString)
         
         console.log('🔥 Chamando função excluirSolicitacao...')
+        console.log('⏳ Aguardando resposta do Firebase...')
+        
+        const inicio = Date.now()
         const resultado = await excluirSolicitacao(idString)
+        const tempo = Date.now() - inicio
         
         console.log('📊 Resultado da exclusão:', resultado)
+        console.log('Success:', resultado.success)
+        console.log('Error:', resultado.error)
+        console.log('Message:', resultado.message)
+        console.log('⏱️ Tempo de resposta:', tempo + 'ms')
         
         if (resultado.success) {
           console.log('✅ Solicitação excluída do Firebase com sucesso!')
           console.log('🔄 Aguardando atualização em tempo real...')
+          
+          // Mostrar mensagem de sucesso para o usuário
+          alert('Solicitação excluída com sucesso!')
+          
+          // Mostrar mensagem de sucesso
+          if (resultado.message) {
+            console.log('ℹ️ Mensagem:', resultado.message)
+          }
+          
           // Não precisa recarregar manualmente, o listener vai atualizar
           console.log('✅ Aguardando listener do Firebase...')
         } else {
@@ -126,8 +165,16 @@ const AdminPage = () => {
       } catch (error) {
         console.error('❌ Erro geral ao excluir:', error)
         console.error('Stack trace:', error.stack)
-        alert('Erro ao excluir solicitação: ' + error.message)
+        
+        // Verificar se é erro de rede ou Firebase
+        if (error.message.includes('network') || error.message.includes('offline')) {
+          alert('Erro de conexão. Verifique sua internet e tente novamente.')
+        } else {
+          alert('Erro ao excluir solicitação: ' + error.message)
+        }
       }
+    } else {
+      console.log('❌ Usuário cancelou exclusão')
     }
   }
 
@@ -160,7 +207,7 @@ const AdminPage = () => {
   }
 
   const adicionarEventoTimeline = (tipo, titulo, descricao) => {
-    if (!solicitacaoSelecionada) return
+    if (!solicitacaoSelecionada?.id) return
 
     const novoEvento = {
       id: Date.now(),
@@ -189,7 +236,7 @@ const AdminPage = () => {
     const propostaId = `proposta_${Date.now()}`
     const linkPropostaGerado = `${window.location.origin}/proposta/${propostaId}`
     
-    // Criar dados da proposta
+    // Criar dados da proposta com TODOS os campos
     const propostaData = {
       id: propostaId,
       data: new Date().toISOString(),
@@ -201,12 +248,39 @@ const AdminPage = () => {
         destino: solicitacao.destino || 'Destino não informado',
         tipoServico: solicitacao.tipoServico || 'Serviço não informado',
         data: solicitacao.data || new Date().toISOString(),
-        observacoes: solicitacao.observacoes || ''
+        dataDesejada: solicitacao.dataDesejada || '',
+        tamanhoMudanca: solicitacao.tamanhoMudanca || '',
+        tipoAjudantes: solicitacao.tipoAjudantes || '',
+        quantidadeAjudantes: solicitacao.quantidadeAjudantes || 1,
+        tipoImovelOrigem: solicitacao.tipoImovelOrigem || '',
+        tipoImovelDestino: solicitacao.tipoImovelDestino || '',
+        andarOrigem: solicitacao.andarOrigem || 0,
+        andarDestino: solicitacao.andarDestino || 0,
+        elevadorOrigem: solicitacao.elevadorOrigem || false,
+        elevadorDestino: solicitacao.elevadorDestino || false,
+        observacao: solicitacao.observacao || solicitacao.observacoes || ''
       }
     }
     
     // Salvar no localStorage
     localStorage.setItem(`proposta_${propostaId}`, JSON.stringify(propostaData))
+    
+    // Salvar o link na timeline da solicitação
+    const timelineData = localStorage.getItem(`timeline_${solicitacao.id}`)
+    const timeline = timelineData ? JSON.parse(timelineData) : []
+    
+    // Adicionar evento de proposta com o link
+    const eventoProposta = {
+      id: Date.now(),
+      tipo: 'proposta',
+      titulo: 'Link da Proposta Gerado',
+      descricao: `Link gerado: ${linkPropostaGerado}`,
+      link: linkPropostaGerado,
+      data: new Date().toISOString()
+    }
+    
+    timeline.push(eventoProposta)
+    localStorage.setItem(`timeline_${solicitacao.id}`, JSON.stringify(timeline))
     
     return { link: linkPropostaGerado, propostaData }
   }
@@ -222,7 +296,26 @@ const AdminPage = () => {
     })
 
     // Gerar link da proposta
-    const { link: linkPropostaGerado } = gerarLinkProposta(solicitacaoParaProposta, parseFloat(valorProposta))
+    const { link: linkPropostaGerado, propostaData: propostaDataGerada } = gerarLinkProposta(solicitacaoParaProposta, parseFloat(valorProposta))
+    const propostaId = propostaDataGerada.id
+    
+    // Atualizar proposta provisória se existir
+    const propostaProvisoriaId = `proposta_${solicitacaoParaProposta.id.split('_')[1]}`
+    const propostaProvisoria = localStorage.getItem(`proposta_${propostaProvisoriaId}`)
+    
+    if (propostaProvisoria) {
+      console.log('🔄 Atualizando proposta provisória...')
+      // Atualizar a proposta provisória com os dados finais
+      const propostaAtualizada = {
+        ...propostaDataGerada,
+        status: 'finalizada', // Mudar status de 'em_analise' para 'finalizada'
+        valor: parseFloat(valorProposta)
+      }
+      localStorage.setItem(`proposta_${propostaId}`, JSON.stringify(propostaAtualizada))
+      // Manter também a versão provisória atualizada para compatibilidade
+      localStorage.setItem(`proposta_${propostaProvisoriaId}`, JSON.stringify(propostaAtualizada))
+      console.log('✅ Proposta provisória atualizada com sucesso!')
+    }
 
     const conteudoPDF = `
       <!DOCTYPE html>
@@ -231,122 +324,412 @@ const AdminPage = () => {
         <meta charset="UTF-8">
         <title>Proposta de Frete - Pá-chego</title>
         <style>
-          body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }
-          .header { text-align: center; margin-bottom: 30px; }
-          .logo { font-size: 24px; font-weight: bold; color: #2563eb; margin-bottom: 10px; }
-          .subtitle { color: #666; font-size: 14px; }
-          .section { margin: 20px 0; }
-          .section-title { font-size: 18px; font-weight: bold; color: #333; margin-bottom: 10px; border-bottom: 2px solid #2563eb; padding-bottom: 5px; }
-          .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0; }
-          .info-item { margin: 8px 0; }
-          .info-label { font-weight: bold; color: #555; }
-          .info-value { color: #333; }
-          .valor-destaque { font-size: 24px; font-weight: bold; color: #059669; text-align: center; background: #f0fdf4; padding: 20px; border-radius: 8px; margin: 20px 0; }
-          .observacoes { background: #f8fafc; padding: 15px; border-radius: 8px; margin: 20px 0; }
-          .footer { margin-top: 40px; text-align: center; color: #666; font-size: 12px; }
-          .badge { display: inline-block; background: #dbeafe; color: #1e40af; padding: 4px 8px; border-radius: 4px; font-size: 12px; margin-left: 8px; }
+          @media print {
+            @page {
+              size: A4;
+              margin: 1cm;
+            }
+            
+            * {
+              print-color-adjust: exact;
+              -webkit-print-color-adjust: exact;
+            }
+            
+            .no-print {
+              display: none !important;
+            }
+            
+            .print-page {
+              background: white !important;
+              min-height: auto !important;
+              padding: 0 !important;
+            }
+            
+            .print-content {
+              box-shadow: none !important;
+              border: none !important;
+              max-width: 100% !important;
+              margin: 0 !important;
+              padding: 0 !important;
+            }
+            
+            .print-header {
+              background: white !important;
+              border-bottom: 1px solid #2563eb !important;
+              padding: 0.5rem 0 !important;
+              margin-bottom: 0.5rem !important;
+            }
+            
+            .print-section {
+              margin-bottom: 0.5rem !important;
+              padding: 0.25rem !important;
+            }
+            
+            .p-6, .px-6, .py-6 {
+              padding: 0.5rem !important;
+            }
+            
+            .p-4, .px-4, .py-4 {
+              padding: 0.25rem !important;
+            }
+            
+            .mb-6, .my-6 {
+              margin-bottom: 0.5rem !important;
+            }
+            
+            .mb-4, .my-4 {
+              margin-bottom: 0.25rem !important;
+            }
+            
+            .text-2xl {
+              font-size: 1.25rem !important;
+              line-height: 1.5 !important;
+            }
+            
+            .text-xl {
+              font-size: 1.125rem !important;
+              line-height: 1.4 !important;
+            }
+            
+            .text-lg {
+              font-size: 1rem !important;
+              line-height: 1.4 !important;
+            }
+          }
+          
+          body { 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            line-height: 1.4; 
+            background: #f3f4f6;
+          }
+          
+          .print-page {
+            background: white;
+            min-height: 100vh;
+          }
+          
+          .print-header {
+            background: white;
+            border-bottom: 1px solid #2563eb;
+            padding: 0.5rem 0;
+            margin-bottom: 0.5rem;
+          }
+          
+          .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+          }
+          
+          .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+          }
+          
+          .logo-text {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #1f2937;
+          }
+          
+          .subtitle {
+            font-size: 0.875rem;
+            color: #6b7280;
+          }
+          
+          .header-info {
+            text-align: right;
+          }
+          
+          .proposal-id {
+            font-size: 0.75rem;
+            color: #6b7280;
+          }
+          
+          .proposal-date {
+            font-size: 0.75rem;
+            color: #6b7280;
+          }
+          
+          .print-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+          }
+          
+          .section {
+            margin-bottom: 0.5rem;
+            padding: 0.25rem;
+          }
+          
+          .section-header {
+            background: #dbeafe;
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #93c5fd;
+            margin-bottom: 0.5rem;
+          }
+          
+          .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+          }
+          
+          .section-content {
+            padding: 0.5rem 1rem;
+          }
+          
+          .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+          }
+          
+          .info-item {
+            margin-bottom: 0.25rem;
+          }
+          
+          .info-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-bottom: 0.125rem;
+          }
+          
+          .info-value {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #1f2937;
+          }
+          
+          .valor-section {
+            background: #dcfce7;
+            border-top: 2px solid #22c55e;
+            padding: 0.75rem 1rem;
+            text-align: center;
+          }
+          
+          .valor-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-bottom: 0.25rem;
+          }
+          
+          .valor-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #16a34a;
+          }
+          
+          .valor-note {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+          }
+          
+          .contact-section {
+            background: #f9fafb;
+            border-top: 2px solid #d1d5db;
+            padding: 0.5rem 1rem;
+          }
+          
+          .contact-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+          }
+          
+          .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            font-size: 0.75rem;
+          }
+          
+          .contact-item {
+            text-align: center;
+          }
+          
+          .contact-label {
+            color: #6b7280;
+            margin-bottom: 0.125rem;
+          }
+          
+          .contact-value {
+            font-weight: 500;
+            color: #1f2937;
+          }
         </style>
       </head>
       <body>
-        <div class="header">
-          <div class="logo">PÁ-CHEGO FRETES</div>
-          <div class="subtitle">Seu orçamento Chegou ;)</div>
-        </div>
-
-        <div class="section">
-          <div class="section-title">📋 Dados da Solicitação</div>
-          <div class="info-grid">
-            <div class="info-item">
-              <div class="info-label">Cliente:</div>
-              <div class="info-value">${solicitacaoParaProposta.nome}</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">Contato:</div>
-              <div class="info-value">${solicitacaoParaProposta.celular}</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">Data da Solicitação:</div>
-              <div class="info-value">${solicitacaoParaProposta.data}</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">Data Desejada:</div>
-              <div class="info-value">${solicitacaoParaProposta.dataDesejada || 'Não informada'}</div>
+        <div class="print-page">
+          <!-- Header -->
+          <div class="print-header">
+            <div class="header-content">
+              <div class="logo-section">
+                <div>
+                  <div class="logo-text">Pá-chego Fretes</div>
+                  <div class="subtitle">Empresa Goiana - Atendimento Nacional</div>
+                </div>
+              </div>
+              <div class="header-info">
+                <div class="proposal-id">Proposta: #${propostaId.split('_')[1]}</div>
+                <div class="proposal-date">Gerada em: ${new Date().toLocaleString('pt-BR', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}</div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="section">
-          <div class="section-title">🚚 Detalhes do Frete</div>
-          <div class="info-grid">
-            <div class="info-item">
-              <div class="info-label">Origem:</div>
-              <div class="info-value">${solicitacaoParaProposta.origem}</div>
+          <!-- Conteúdo -->
+          <div class="print-content">
+            <!-- Dados do Cliente -->
+            <div class="section">
+              <div class="section-header">
+                <h2 class="section-title">Dados do Cliente</h2>
+              </div>
+              <div class="section-content">
+                <div class="info-grid">
+                  <div class="info-item">
+                    <div class="info-label">Nome</div>
+                    <div class="info-value">${solicitacaoParaProposta.nome || 'Não informado'}</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Celular WhatsApp</div>
+                    <div class="info-value">${solicitacaoParaProposta.celular || 'Não informado'}</div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="info-item">
-              <div class="info-label">Destino:</div>
-              <div class="info-value">${solicitacaoParaProposta.destino}</div>
+
+            <!-- Detalhes do Frete -->
+            <div class="section">
+              <div class="section-header">
+                <h2 class="section-title">Detalhes do Frete</h2>
+              </div>
+              <div class="section-content">
+                <div class="info-grid">
+                  <div class="info-item">
+                    <div class="info-label">Origem</div>
+                    <div class="info-value">${solicitacaoParaProposta.origem || 'Não informado'}</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Destino</div>
+                    <div class="info-value">${solicitacaoParaProposta.destino || 'Não informado'}</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Tipo de Serviço</div>
+                    <div class="info-value">${solicitacaoParaProposta.tipoServico || 'Não informado'}</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Data da Solicitação</div>
+                    <div class="info-value">${solicitacaoParaProposta.data ? new Date(solicitacaoParaProposta.data).toLocaleString('pt-BR', {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    }) : 'Não informado'}</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Data Desejada para o Serviço</div>
+                    <div class="info-value">${solicitacaoParaProposta.dataDesejada ? new Date(solicitacaoParaProposta.dataDesejada).toLocaleDateString('pt-BR') : 'Não informada'}</div>
+                  </div>
+                  ${solicitacaoParaProposta.tamanhoMudanca ? `
+                  <div class="info-item">
+                    <div class="info-label">Tamanho da Mudança</div>
+                    <div class="info-value">${solicitacaoParaProposta.tamanhoMudanca}</div>
+                  </div>
+                  ` : ''}
+                  ${solicitacaoParaProposta.tipoAjudantes ? `
+                  <div class="info-item">
+                    <div class="info-label">Ajudantes</div>
+                    <div class="info-value">${solicitacaoParaProposta.tipoAjudantes === 'empresa' 
+                      ? `${solicitacaoParaProposta.quantidadeAjudantes || 1} da empresa`
+                      : 'Próprios'}</div>
+                  </div>
+                  ` : ''}
+                </div>
+              </div>
             </div>
-            <div class="info-item">
-              <div class="info-label">Tamanho da Mudança:</div>
-              <div class="info-value">${solicitacaoParaProposta.tamanhoMudanca} <span class="badge">${solicitacaoParaProposta.tamanhoMudanca === 'pequena' ? 'Até 2 cômodos' : solicitacaoParaProposta.tamanhoMudanca === 'media' ? '3-4 cômodos' : '5+ cômodos'}</span></div>
+
+            <!-- Informações dos Imóveis -->
+            ${(solicitacaoParaProposta.tipoImovelOrigem || solicitacaoParaProposta.tipoImovelDestino) ? `
+            <div class="section">
+              <div class="section-header">
+                <h2 class="section-title">Informações dos Imóveis</h2>
+              </div>
+              <div class="section-content">
+                <div class="info-grid">
+                  ${solicitacaoParaProposta.tipoImovelOrigem ? `
+                  <div class="info-item">
+                    <div class="info-label">Imóvel de Origem</div>
+                    <div class="info-value">${solicitacaoParaProposta.tipoImovelOrigem === 'casa' ? '🏠 Casa' : '🏢 Apartamento'}${solicitacaoParaProposta.tipoImovelOrigem === 'apartamento' && solicitacaoParaProposta.andarOrigem > 0 ? ` - ${solicitacaoParaProposta.andarOrigem}º andar` : ''}${solicitacaoParaProposta.tipoImovelOrigem === 'apartamento' && solicitacaoParaProposta.elevadorOrigem ? ' (com elevador)' : ''}${solicitacaoParaProposta.tipoImovelOrigem === 'apartamento' && !solicitacaoParaProposta.elevadorOrigem && solicitacaoParaProposta.andarOrigem > 0 ? ' (sem elevador)' : ''}</div>
+                  </div>
+                  ` : ''}
+                  ${solicitacaoParaProposta.tipoImovelDestino ? `
+                  <div class="info-item">
+                    <div class="info-label">Imóvel de Destino</div>
+                    <div class="info-value">${solicitacaoParaProposta.tipoImovelDestino === 'casa' ? '🏠 Casa' : '🏢 Apartamento'}${solicitacaoParaProposta.tipoImovelDestino === 'apartamento' && solicitacaoParaProposta.andarDestino > 0 ? ` - ${solicitacaoParaProposta.andarDestino}º andar` : ''}${solicitacaoParaProposta.tipoImovelDestino === 'apartamento' && solicitacaoParaProposta.elevadorDestino ? ' (com elevador)' : ''}${solicitacaoParaProposta.tipoImovelDestino === 'apartamento' && !solicitacaoParaProposta.elevadorDestino && solicitacaoParaProposta.andarDestino > 0 ? ' (sem elevador)' : ''}</div>
+                  </div>
+                  ` : ''}
+                </div>
+              </div>
             </div>
-            <div class="info-item">
-              <div class="info-label">Ajudantes:</div>
-              <div class="info-value">${solicitacaoParaProposta.tipoAjudantes === 'empresa' ? `${solicitacaoParaProposta.quantidadeAjudantes} da empresa` : 'Próprios'}</div>
+            ` : ''}
+
+            <!-- Observações -->
+            ${(solicitacaoParaProposta.observacao || solicitacaoParaProposta.observacoes) ? `
+            <div class="section">
+              <div class="section-header">
+                <h2 class="section-title">Observações</h2>
+              </div>
+              <div class="section-content">
+                <div class="info-value" style="background: #f9fafb; padding: 0.5rem; border-radius: 0.25rem;">${solicitacaoParaProposta.observacao || solicitacaoParaProposta.observacoes}</div>
+              </div>
+            </div>
+            ` : ''}
+
+            <!-- Valor Total -->
+            <div class="valor-section">
+              <div class="valor-label">Valor Total da Proposta</div>
+              <div class="valor-value">${valorFormatado}</div>
+              <div class="valor-note">⏰ Proposta válida por 7 dias a partir da data de emissão</div>
+            </div>
+
+            <!-- Informações de Contato -->
+            <div class="contact-section">
+              <div class="contact-title">📞 Entre em Contato</div>
+              <div class="contact-grid">
+                <div class="contact-item">
+                  <div class="contact-label">WhatsApp</div>
+                  <div class="contact-value">(62) 99110-3510</div>
+                </div>
+                <div class="contact-item">
+                  <div class="contact-label">Email</div>
+                  <div class="contact-value">contato@pachego.com.br</div>
+                </div>
+                <div class="contact-item">
+                  <div class="contact-label">Site</div>
+                  <div class="contact-value">www.pachego.com.br</div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div class="section">
-          <div class="section-title">🏠 Informações dos Imóveis</div>
-          <div class="info-grid">
-            <div class="info-item">
-              <div class="info-label">Imóvel de Origem:</div>
-              <div class="info-value">${solicitacaoParaProposta.tipoImovelOrigem === 'casa' ? '🏠 Casa' : '🏢 Apartamento'}${solicitacaoParaProposta.tipoImovelOrigem === 'apartamento' && solicitacaoParaProposta.andarOrigem > 0 ? ` - ${solicitacaoParaProposta.andarOrigem}º andar` : ''}${solicitacaoParaProposta.tipoImovelOrigem === 'apartamento' && solicitacaoParaProposta.elevadorOrigem ? ' (com elevador)' : ''}</div>
-            </div>
-            <div class="info-item">
-              <div class="info-label">Imóvel de Destino:</div>
-              <div class="info-value">${solicitacaoParaProposta.tipoImovelDestino === 'casa' ? '🏠 Casa' : '🏢 Apartamento'}${solicitacaoParaProposta.tipoImovelDestino === 'apartamento' && solicitacaoParaProposta.andarDestino > 0 ? ` - ${solicitacaoParaProposta.andarDestino}º andar` : ''}${solicitacaoParaProposta.tipoImovelDestino === 'apartamento' && solicitacaoParaProposta.elevadorDestino ? ' (com elevador)' : ''}</div>
-            </div>
-          </div>
-        </div>
-
-        ${solicitacaoParaProposta.observacao ? `
-        <div class="section">
-          <div class="section-title">📝 Observações</div>
-          <div class="observacoes">
-            ${solicitacaoParaProposta.observacao}
-          </div>
-        </div>
-        ` : ''}
-
-        <div class="valor-destaque">
-          💰 VALOR DA PROPOSTA: ${valorFormatado}
-        </div>
-
-        <div class="section">
-          <div class="section-title">✅ O que está incluído</div>
-          <ul>
-            <li>Veículo adequado para o tamanho da mudança</li>
-            <li>${solicitacaoParaProposta.tipoAjudantes === 'empresa' ? `${solicitacaoParaProposta.quantidadeAjudantes} ajudante(s) profissional(is)` : 'Suporte para seus ajudantes próprios'}</li>
-            <li>Atendimento personalizado</li>
-          </ul>
-        </div>
-
-        <div class="section">
-          <div class="section-title">📞 Próximos Passos</div>
-          <p>Para confirmar este orçamento ou esclarecer dúvidas, entre em contato conosco:</p>
-          <ul>
-            <li><strong>WhatsApp:</strong> (62) 99110-3510</li>
-            <li><strong>Email:</strong> contato@pachego.com.br</li>
-            <li><strong>Site:</strong> www.pachego.com.br</li>
-          </ul>
-        </div>
-
-        <div class="footer">
-          <p>Este orçamento é válido por 7 dias a partir da data de emissão.</p>
-          <p>Pá-chego Fretes - Sua mudança com segurança e qualidade!</p>
-          <p>Emitido em: ${dataAtual}</p>
         </div>
       </body>
       </html>
@@ -366,19 +749,51 @@ const AdminPage = () => {
     setLinkProposta(linkPropostaGerado)
     setPropostaGerada(true)
     
-    // Salvar proposta no localStorage
-    const propostaData = {
+    // Salvar proposta completa no localStorage com TODOS os campos
+    const propostaDataCompleta = {
       id: propostaId,
       solicitacaoId: solicitacaoParaProposta.id,
-      valor: valorProposta,
+      valor: parseFloat(valorProposta),
       data: new Date().toISOString(),
-      conteudo: conteudoPDF
+      conteudo: conteudoPDF,
+      solicitacao: {
+        nome: solicitacaoParaProposta.nome || 'Nome não informado',
+        celular: solicitacaoParaProposta.celular || 'Celular não informado',
+        origem: solicitacaoParaProposta.origem || 'Origem não informada',
+        destino: solicitacaoParaProposta.destino || 'Destino não informado',
+        tipoServico: solicitacaoParaProposta.tipoServico || 'Serviço não informado',
+        data: solicitacaoParaProposta.data || new Date().toISOString(),
+        dataDesejada: solicitacaoParaProposta.dataDesejada || '',
+        tamanhoMudanca: solicitacaoParaProposta.tamanhoMudanca || '',
+        tipoAjudantes: solicitacaoParaProposta.tipoAjudantes || '',
+        quantidadeAjudantes: solicitacaoParaProposta.quantidadeAjudantes || 1,
+        tipoImovelOrigem: solicitacaoParaProposta.tipoImovelOrigem || '',
+        tipoImovelDestino: solicitacaoParaProposta.tipoImovelDestino || '',
+        andarOrigem: solicitacaoParaProposta.andarOrigem || 0,
+        andarDestino: solicitacaoParaProposta.andarDestino || 0,
+        elevadorOrigem: solicitacaoParaProposta.elevadorOrigem || false,
+        elevadorDestino: solicitacaoParaProposta.elevadorDestino || false,
+        observacao: solicitacaoParaProposta.observacao || solicitacaoParaProposta.observacoes || ''
+      }
     }
-    localStorage.setItem(`proposta_${propostaId}`, JSON.stringify(propostaData))
+    localStorage.setItem(`proposta_${propostaId}`, JSON.stringify(propostaDataCompleta))
     
     // Adicionar à timeline se estiver na tela de detalhes
     if (mostrarDetalhes && solicitacaoSelecionada) {
-      adicionarEventoTimeline('proposta', 'Proposta Gerada', `Proposta de ${valorFormatado} criada e link gerado`)
+      // Adicionar evento de proposta com o link
+      const eventoProposta = {
+        id: Date.now(),
+        tipo: 'proposta',
+        titulo: 'Proposta Gerada',
+        descricao: `Proposta de ${valorFormatado} criada e link gerado`,
+        link: linkPropostaGerado,
+        data: new Date().toISOString(),
+        status: 'concluido'
+      }
+      
+      const novaTimeline = [...timeline, eventoProposta]
+      setTimeline(novaTimeline)
+      localStorage.setItem(`timeline_${solicitacaoSelecionada.id}`, JSON.stringify(novaTimeline))
     }
     
     // Atualizar status
@@ -393,73 +808,116 @@ const AdminPage = () => {
       currency: 'BRL'
     })
 
-    const mensagem = `🎉 *Seu orçamento ficou pronto!*
+    const mensagem = `*SEU ORCAMENTO FICOU PRONTO!*
 
-Olá ${solicitacaoParaProposta.nome}! 
+Ola ${solicitacaoParaProposta.nome}! 
 
-Sua solicitação de frete foi analisada e já temos uma proposta personalizada para você:
+Sua solicitacao de frete foi analisada e ja temos uma proposta personalizada para voce:
 
-📋 *RESUMO DO SERVIÇO:*
-• *Origem:* ${solicitacaoParaProposta.origem}
-• *Destino:* ${solicitacaoParaProposta.destino}
-• *Tamanho:* ${solicitacaoParaProposta.tamanhoMudanca}
-• *Ajudantes:* ${solicitacaoParaProposta.tipoAjudantes === 'empresa' ? `${solicitacaoParaProposta.quantidadeAjudantes} da empresa` : 'Próprios'}
+*RESUMO DO SERVICO:*
+• Origem: ${solicitacaoParaProposta.origem}
+• Destino: ${solicitacaoParaProposta.destino}
+• Tamanho: ${solicitacaoParaProposta.tamanhoMudanca}
+• Ajudantes: ${solicitacaoParaProposta.tipoAjudantes === 'empresa' ? `${solicitacaoParaProposta.quantidadeAjudantes} da empresa` : 'Proprios'}
 
-💰 *VALOR DA PROPOSTA: ${valorFormatado}*
+*VALOR DA PROPOSTA: ${valorFormatado}*
 
-📄 *Acesse sua proposta completa aqui:*
+*ACESSE SUA PROPOSTA COMPLETA:*
 ${linkProposta}
 
-✅ *O que está incluído:*
-• Veículo adequado para o tamanho da mudança
-• ${solicitacaoParaProposta.tipoAjudantes === 'empresa' ? `${solicitacaoParaProposta.quantidadeAjudantes} ajudante(s) profissional(is)` : 'Suporte para seus ajudantes próprios'}
+*O QUE ESTA INCLUIDO:*
+• Veiculo adequado para o tamanho da mudanca
+• ${solicitacaoParaProposta.tipoAjudantes === 'empresa' ? `${solicitacaoParaProposta.quantidadeAjudantes} ajudante(s) profissional(is)` : 'Suporte para seus ajudantes proprios'}
 • Atendimento personalizado
 
-📞 *Para confirmar ou esclarecer dúvidas:*
+*PARA CONFIRMAR OU ESCLARECER DUVIDAS:*
 • WhatsApp: (62) 99110-3510
 • Email: contato@pachego.com.br
 
-⏰ *Esta proposta é válida por 7 dias.*
+Esta proposta e valida por 7 dias.
 
-Aguardamos seu retorno! 😊
+Aguardamos seu retorno!
 
-_Equipe Pá-chego Fretes_`
+_Equipe Pa-chego Fretes_`
 
     return encodeURIComponent(mensagem)
   }
 
   const gerarMensagemWhatsAppCompleta = () => {
-    if (!solicitacaoSelecionada) return ''
+    if (!solicitacaoSelecionada?.nome) return ''
     
     const valorFormatado = linkProposta ? parseFloat(valorProposta).toLocaleString('pt-BR', {
       style: 'currency',
       currency: 'BRL'
     }) : 'A ser definido'
 
-    const mensagem = `🎉 *Seu orçamento ficou pronto!*
+    const mensagem = `*SEU ORCAMENTO FICOU PRONTO!*
 
-Olá ${solicitacaoSelecionada.nome}! 
+Ola ${solicitacaoSelecionada.nome}! 
 
-Sua solicitação de frete foi analisada e já temos uma proposta personalizada para você:
+Sua solicitacao de frete foi analisada e ja temos uma proposta personalizada para voce:
 
-📋 *RESUMO DO SERVIÇO:*
-• *Origem:* ${solicitacaoSelecionada.origem}
-• *Destino:* ${solicitacaoSelecionada.destino}
-• *Tipo:* ${solicitacaoSelecionada.tipoServico}
-${solicitacaoSelecionada.tamanhoMudanca ? `• *Tamanho:* ${solicitacaoSelecionada.tamanhoMudanca}` : ''}
-${solicitacaoSelecionada.tipoAjudantes ? `• *Ajudantes:* ${solicitacaoSelecionada.tipoAjudantes === 'empresa' ? `${solicitacaoSelecionada.quantidadeAjudantes} da empresa` : 'Próprios'}` : ''}
+*RESUMO DO SERVICO:*
+• Origem: ${solicitacaoSelecionada.origem}
+• Destino: ${solicitacaoSelecionada.destino}
+• Tipo: ${solicitacaoSelecionada.tipoServico}
+${solicitacaoSelecionada.tamanhoMudanca ? `• Tamanho: ${solicitacaoSelecionada.tamanhoMudanca}` : ''}
+${solicitacaoSelecionada.tipoAjudantes ? `• Ajudantes: ${solicitacaoSelecionada.tipoAjudantes === 'empresa' ? `${solicitacaoSelecionada.quantidadeAjudantes} da empresa` : 'Proprios'}` : ''}
 
-💰 *VALOR DA PROPOSTA: ${valorFormatado}*
+*VALOR DA PROPOSTA: ${valorFormatado}*
 
-${linkProposta ? `🔗 *ACESSE SUA PROPOSTA COMPLETA:*
+${linkProposta ? `*ACESSE SUA PROPOSTA COMPLETA:*
 ${linkProposta}
 
-` : ''}📞 *DÚVIDAS?* 
+` : ''}*DUVIDAS?* 
 Estamos aqui para ajudar! Responda esta mensagem ou ligue para (62) 99110-3510
 
-_Equipe Pá-chego Fretes_`
+_Equipe Pa-chego Fretes_`
 
     return encodeURIComponent(mensagem)
+  }
+
+  const gerarMensagemWhatsAppProposta = (linkProposta) => {
+    if (!solicitacaoSelecionada?.nome) return ''
+    
+    const mensagem = `Ola! Sua proposta de frete esta pronta!
+    
+*DETALHES DA PROPOSTA:*
+• Cliente: ${solicitacaoSelecionada.nome || 'Nao informado'}
+• Origem: ${solicitacaoSelecionada.origem || 'Nao informado'}
+• Destino: ${solicitacaoSelecionada.destino || 'Nao informado'}
+• Servico: ${solicitacaoSelecionada.tipoServico || 'Nao informado'}
+
+*ACESSE SUA PROPOSTA COMPLETA:*
+${linkProposta}
+
+Esta proposta e valida por 7 dias.
+
+Para aceitar ou tirar duvidas, entre em contato conosco!
+
+_Equipe Pa-chego Fretes_`
+
+    return mensagem
+  }
+
+  const excluirProposta = (eventoId) => {
+    if (!confirm('Tem certeza que deseja excluir esta proposta? Esta ação não pode ser desfeita.')) {
+      return
+    }
+
+    // Remover da timeline
+    const novaTimeline = timeline.filter(evento => evento.id !== eventoId)
+    setTimeline(novaTimeline)
+    localStorage.setItem(`timeline_${solicitacaoSelecionada.id}`, JSON.stringify(novaTimeline))
+
+    // Encontrar e remover dados da proposta do localStorage
+    const evento = timeline.find(e => e.id === eventoId)
+    if (evento && evento.link) {
+      const propostaId = evento.link.split('/').pop()
+      localStorage.removeItem(`proposta_${propostaId}`)
+    }
+
+    alert('Proposta excluída com sucesso!')
   }
 
   const getStatusColor = (status) => {
@@ -710,21 +1168,48 @@ _Equipe Pá-chego Fretes_`
                               >
                                 📄 Proposta
                               </button>
-                              <button
-                                onClick={() => {
-                                  const { link } = gerarLinkProposta(solicitacao, 0)
-                                  navigator.clipboard.writeText(link)
-                                  
-                                  // Adicionar evento na timeline
-                                  adicionarEventoTimeline('proposta', 'Link Gerado', `Link da proposta gerado e copiado para área de transferência`)
-                                  
-                                  alert('Link gerado e copiado para a área de transferência!')
-                                }}
-                                className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-purple-500 to-purple-600 text-white text-xs font-semibold rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
-                                title="Gerar link da proposta"
-                              >
-                                🔗 Link
-                              </button>
+                              {/* Botão Link - só aparece se já foi gerado */}
+                              {(() => {
+                                // Verificar se já existe link gerado na timeline
+                                const timelineData = localStorage.getItem(`timeline_${solicitacao.id}`)
+                                const temLink = timelineData ? JSON.parse(timelineData).some(e => e.tipo === 'proposta') : false
+                                
+                                return temLink ? (
+                                  <button
+                                    onClick={() => {
+                                      // Buscar o link existente na timeline
+                                      const timelineData = localStorage.getItem(`timeline_${solicitacao.id}`)
+                                      const timeline = timelineData ? JSON.parse(timelineData) : []
+                                      const eventoProposta = timeline.find(e => e.tipo === 'proposta')
+                                      
+                                      if (eventoProposta && eventoProposta.link) {
+                                        navigator.clipboard.writeText(eventoProposta.link)
+                                        alert('Link copiado para a área de transferência!')
+                                      }
+                                    }}
+                                    className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs font-semibold rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                                    title="Copiar link da proposta"
+                                  >
+                                    📋 Copiar
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() => {
+                                      const { link } = gerarLinkProposta(solicitacao, 0)
+                                      navigator.clipboard.writeText(link)
+                                      
+                                      alert('Link gerado e copiado para a área de transferência!')
+                                      
+                                      // Recarregar a página para atualizar o botão
+                                      window.location.reload()
+                                    }}
+                                    className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-purple-500 to-purple-600 text-white text-xs font-semibold rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                                    title="Gerar link da proposta"
+                                  >
+                                    🔗 Gerar
+                                  </button>
+                                )
+                              })()}
                               <select
                                 value={solicitacao.status}
                                 onChange={(e) => atualizarStatusSolicitacao(solicitacao.id, e.target.value)}
@@ -736,7 +1221,7 @@ _Equipe Pá-chego Fretes_`
                                 <option value="cancelada">❌ Cancelada</option>
                               </select>
                               <button
-                                onClick={() => excluirSolicitacaoSolicitacao(solicitacao.id)}
+                                onClick={() => excluirSolicitacaoSolicitacao(solicitacao.firebaseId || solicitacao.id)}
                                 className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-semibold rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
                               >
                                 🗑️ Excluir
@@ -754,7 +1239,7 @@ _Equipe Pá-chego Fretes_`
         </div>
 
         {/* Tela de Detalhes */}
-        {mostrarDetalhes && solicitacaoSelecionada && (
+        {mostrarDetalhes && solicitacaoSelecionada?.id && (
           <div className="fixed inset-0 bg-white z-50 overflow-y-auto">
             {/* Header da Tela de Detalhes */}
             <div className="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-4 shadow-lg">
@@ -768,7 +1253,7 @@ _Equipe Pá-chego Fretes_`
                   </button>
                   <div>
                     <h2 className="text-2xl font-bold text-white">Detalhes da Solicitação</h2>
-                    <p className="text-blue-100">ID: #{solicitacaoSelecionada.id}</p>
+                    <p className="text-blue-100">ID: #{solicitacaoSelecionada?.id || 'N/A'}</p>
                   </div>
                 </div>
                 <div className="flex space-x-3">
@@ -868,14 +1353,56 @@ _Equipe Pá-chego Fretes_`
                     </div>
                   </div>
 
+                  {/* Informações dos Imóveis - NOVO */}
+                  {(solicitacaoSelecionada.tipoImovelOrigem || solicitacaoSelecionada.tipoImovelDestino) && (
+                    <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                      <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                        <span className="text-2xl mr-3">🏠</span>
+                        Informações dos Imóveis
+                      </h3>
+                      <div className="space-y-4">
+                        {solicitacaoSelecionada.tipoImovelOrigem && (
+                          <div>
+                            <label className="text-sm font-semibold text-gray-600">Imóvel de Origem</label>
+                            <p className="text-gray-900 font-medium">
+                              {solicitacaoSelecionada.tipoImovelOrigem === 'casa' ? '🏠 Casa' : '🏢 Apartamento'}
+                              {solicitacaoSelecionada.tipoImovelOrigem === 'apartamento' && (
+                                <>
+                                  {solicitacaoSelecionada.andarOrigem > 0 && ` - ${solicitacaoSelecionada.andarOrigem}º andar`}
+                                  {solicitacaoSelecionada.elevadorOrigem && ' (com elevador)'}
+                                  {!solicitacaoSelecionada.elevadorOrigem && solicitacaoSelecionada.andarOrigem > 0 && ' (sem elevador)'}
+                                </>
+                              )}
+                            </p>
+                          </div>
+                        )}
+                        {solicitacaoSelecionada.tipoImovelDestino && (
+                          <div>
+                            <label className="text-sm font-semibold text-gray-600">Imóvel de Destino</label>
+                            <p className="text-gray-900 font-medium">
+                              {solicitacaoSelecionada.tipoImovelDestino === 'casa' ? '🏠 Casa' : '🏢 Apartamento'}
+                              {solicitacaoSelecionada.tipoImovelDestino === 'apartamento' && (
+                                <>
+                                  {solicitacaoSelecionada.andarDestino > 0 && ` - ${solicitacaoSelecionada.andarDestino}º andar`}
+                                  {solicitacaoSelecionada.elevadorDestino && ' (com elevador)'}
+                                  {!solicitacaoSelecionada.elevadorDestino && solicitacaoSelecionada.andarDestino > 0 && ' (sem elevador)'}
+                                </>
+                              )}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Observações */}
-                  {solicitacaoSelecionada.observacoes && (
+                  {(solicitacaoSelecionada.observacao || solicitacaoSelecionada.observacoes) && (
                     <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
                       <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
                         <span className="text-2xl mr-3">📝</span>
                         Observações
                       </h3>
-                      <p className="text-gray-700 bg-gray-50 p-4 rounded-lg">{solicitacaoSelecionada.observacoes}</p>
+                      <p className="text-gray-700 bg-gray-50 p-4 rounded-lg">{solicitacaoSelecionada.observacao || solicitacaoSelecionada.observacoes}</p>
                     </div>
                   )}
                 </div>
@@ -919,39 +1446,63 @@ _Equipe Pá-chego Fretes_`
                               </p>
                               
                               {/* Link da Proposta integrado na timeline */}
-                              {evento.tipo === 'proposta' && linkProposta && (
-                                <div className="mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                                  <div className="flex items-center justify-between">
-                                    <div className="flex-1 min-w-0">
-                                      <p className="text-xs text-gray-500 mb-1">Link da proposta:</p>
-                                      <p className="text-xs font-mono text-blue-600 truncate">{linkProposta}</p>
+                              {evento.tipo === 'proposta' && evento.link && (
+                                <div className="mt-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                  <div className="space-y-3">
+                                    {/* Link em linha separada */}
+                                    <div>
+                                      <p className="text-sm text-gray-600 mb-2">Link da proposta:</p>
+                                      <div className="bg-white p-3 rounded-lg border border-gray-300">
+                                        <p className="text-sm font-mono text-blue-600 break-all">{evento.link}</p>
+                                      </div>
                                     </div>
-                                    <div className="flex space-x-2 ml-3">
+                                    
+                                    {/* Botões de ação */}
+                                    <div className="flex flex-wrap gap-2">
                                       <button
-                                        onClick={() => navigator.clipboard.writeText(linkProposta)}
-                                        className="p-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-all duration-200"
+                                        onClick={() => navigator.clipboard.writeText(evento.link)}
+                                        className="px-3 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-all duration-200 text-sm flex items-center space-x-1"
                                         title="Copiar link"
                                       >
-                                        📋
+                                        <span>📋</span>
+                                        <span>Copiar</span>
                                       </button>
                                       <a
-                                        href={linkProposta}
+                                        href={evento.link}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-200"
+                                        className="px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-200 text-sm flex items-center space-x-1"
                                         title="Abrir link"
                                       >
-                                        🔗
+                                        <span>🔗</span>
+                                        <span>Abrir</span>
                                       </a>
                                       <a
-                                        href={`https://api.whatsapp.com/send?phone=${solicitacaoSelecionada.celular.replace(/\D/g, '')}&text=${encodeURIComponent(gerarMensagemWhatsAppCompleta())}`}
+                                        href={`https://api.whatsapp.com/send?phone=${solicitacaoSelecionada?.celular?.replace(/\D/g, '')}&text=${encodeURIComponent(gerarMensagemWhatsAppProposta(evento.link))}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="p-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-all duration-200"
+                                        className="px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-all duration-200 text-sm flex items-center space-x-1"
                                         title="Enviar WhatsApp"
                                       >
-                                        📱
+                                        <span>📱</span>
+                                        <span>WhatsApp</span>
                                       </a>
+                                      <button
+                                        onClick={() => window.open(evento.link, '_blank')}
+                                        className="px-3 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-all duration-200 text-sm flex items-center space-x-1"
+                                        title="Imprimir PDF"
+                                      >
+                                        <span>🖨️</span>
+                                        <span>Imprimir</span>
+                                      </button>
+                                      <button
+                                        onClick={() => excluirProposta(evento.id)}
+                                        className="px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all duration-200 text-sm flex items-center space-x-1"
+                                        title="Excluir proposta"
+                                      >
+                                        <span>🗑️</span>
+                                        <span>Excluir</span>
+                                      </button>
                                     </div>
                                   </div>
                                 </div>
@@ -995,10 +1546,10 @@ _Equipe Pá-chego Fretes_`
                     <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center">
                       <span className="text-2xl">📋</span>
                     </div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-white">Detalhes da Solicitação</h3>
-                      <p className="text-blue-100">ID: #{solicitacaoSelecionada.id}</p>
-                    </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-white">Detalhes da Solicitação</h3>
+                    <p className="text-blue-100">ID: #{solicitacaoSelecionada?.id || 'N/A'}</p>
+                  </div>
                   </div>
                   <button
                     onClick={() => setSolicitacaoSelecionada(null)}
