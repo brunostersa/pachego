@@ -4,7 +4,7 @@ import { normalizeText } from '../utils/normalize'
 const Sitemap = () => { return null }
 
 export const getServerSideProps = async ({ res }) => {
-  const baseUrl = 'https://pachego.com.br'
+  const baseUrl = 'https://cotacao.pachegou.com.br'
   const estados = [...new Set(cidades.map(c => c.estado))]
   
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>

@@ -5,6 +5,7 @@ import ImageCarousel from '../../../components/ImageCarousel'
 import Favicon from '../../../components/Favicon'
 import cidades from '../../../cidades-filtradas.json'
 import { galleryImages } from '../../../data/gallery'
+import { getCidadePrincipal, isCidadePrincipal } from '../../../data/cidades-principais'
 import Head from 'next/head'
 import { normalizeText } from '../../../utils/normalize'
 import { getSeoKeywords, getMetaDescription, getPageTitle, getCanonicalUrl } from '../../../utils/seo-keywords'
@@ -36,16 +37,22 @@ export async function getStaticProps({ params }) {
     .filter(c => c.estado === cidadeData.estado && c.cidade !== cidadeData.cidade)
     .slice(0, 5);
 
+  // 📍 verifica se é uma cidade principal
+  const cidadeNormalizada = normalizeText(cidadeData.cidade);
+  const dadosEspecificos = getCidadePrincipal(cidadeNormalizada);
+
   return {
     props: {
       cidade: cidadeData.cidade,
       estado: cidadeData.estado,
-      cidadesProximas
+      cidadesProximas,
+      dadosEspecificos,
+      isCidadePrincipal: isCidadePrincipal(cidadeNormalizada)
     }
   };
 }
 
-export default function FreteCidade({ cidade, estado, cidadesProximas }) {
+export default function FreteCidade({ cidade, estado, cidadesProximas, dadosEspecificos, isCidadePrincipal }) {
   const pageTitle = getPageTitle(cidade, estado);
   const pageDescription = getMetaDescription(cidade, estado);
   const canonicalUrl = getCanonicalUrl(cidade, estado, normalizeText);
@@ -134,6 +141,50 @@ export default function FreteCidade({ cidade, estado, cidadesProximas }) {
             Especialistas em <strong>frete para {cidade}</strong>, <strong>transporte até {cidade}</strong> e <strong>mudanças para {cidade}</strong>. 
             Nota 5.0 de avaliação e atendimento personalizado.
           </p>
+
+          {/* 🏆 Conteúdo Específico para Cidades Principais */}
+          {isCidadePrincipal && dadosEspecificos && (
+            <div className="bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-lg mb-8 border-l-4 border-blue-500">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                🏆 Por que escolher a Pá-chego em {dadosEspecificos.nome}?
+              </h2>
+              
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">📍 Áreas Atendidas</h3>
+                  <div className="grid grid-cols-2 gap-2 text-sm text-gray-600">
+                    {dadosEspecificos.areasAtendidas.map((area, index) => (
+                      <div key={index}>• {area}</div>
+                    ))}
+                  </div>
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">🚚 Serviços Especiais</h3>
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    {dadosEspecificos.servicosEspeciais.map((servico, index) => (
+                      <li key={index} className="flex items-center">
+                        <span className="text-green-500 mr-2">✓</span>
+                        {servico}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              
+              <div className="mt-6 p-4 bg-white rounded-lg">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">🏆 Nossa Experiência</h3>
+                <ul className="space-y-2 text-sm text-gray-600">
+                  {dadosEspecificos.vantagens.map((vantagem, index) => (
+                    <li key={index} className="flex items-center">
+                      <span className="text-green-500 mr-2">✓</span>
+                      {vantagem}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
 
         {/* ✅ Imagem Padrão */}
         <img 
