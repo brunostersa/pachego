@@ -92,27 +92,30 @@ const DetalhesSolicitacao = () => {
     if (!solicitacao) return ''
     
     const numero = solicitacao.celular.replace(/\D/g, '')
+    const urlAtual = `https://cotacao.pachego.com.br/proposta/${id}`
     
-    // Construir mensagem detalhada
-    let mensagem = `Olá ${solicitacao.nome}! 
+    const mensagem = `*SEU ORÇAMENTO FICOU PRONTO!*
 
-Recebemos sua solicitação de ${solicitacao.tipoServico} e gostaríamos de conversar sobre os detalhes do seu frete.
+Olá ${solicitacao.nome || 'Cliente'}! 
 
-📋 *DETALHES DO FRETE:*
-• *Cliente:* ${solicitacao.nome}
-• *Contato:* ${solicitacao.celular}
-• *Origem:* ${solicitacao.origem}
-• *Destino:* ${solicitacao.destino}
-• *Tipo:* ${solicitacao.tipoServico}
-${solicitacao.tamanhoMudanca ? `• *Tamanho:* ${solicitacao.tamanhoMudanca}` : ''}
-${solicitacao.tipoAjudantes ? `• *Ajudantes:* ${solicitacao.tipoAjudantes === 'empresa' ? `${solicitacao.quantidadeAjudantes} da empresa` : 'Próprios'}` : ''}
-${solicitacao.dataDesejada ? `• *Data desejada:* ${solicitacao.dataDesejada}` : ''}
+Sua solicitação de frete foi analisada e já temos uma proposta personalizada para você:
 
-${solicitacao.observacoes ? `📝 *Observações:*
-${solicitacao.observacoes}
-` : ''}Estamos prontos para te atender!
+*RESUMO DO SERVIÇO:*
+• Origem: ${solicitacao.origem || 'Não informado'}
+• Destino: ${solicitacao.destino || 'Não informado'}
+• Tipo: ${solicitacao.tipoServico || 'Não informado'}
+• Tamanho: ${solicitacao.tamanhoMudanca || 'Não informado'}
+• Ajudantes: ${solicitacao.tipoAjudantes === 'empresa' 
+  ? `${solicitacao.quantidadeAjudantes || 1} da empresa`
+  : 'Próprios'}
 
-*Para mais informações ou para fechar o orçamento, responda esta mensagem ou ligue para (62) 99110-3510*
+*VALOR TOTAL: R$ 222,00*
+
+*ACESSE SUA PROPOSTA COMPLETA:*
+${urlAtual}
+
+*DÚVIDAS?* 
+Estamos aqui para ajudar! Responda esta mensagem ou ligue para (62) 99110-3510
 
 _Equipe Pa-chego Fretes_`
 
@@ -291,14 +294,12 @@ _Equipe Pa-chego Fretes_`
                 💰 Gerar Proposta
               </button>
               
-              <a
-                href={gerarMensagemWhatsAppCompleta()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full block px-4 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 flex items-center justify-center"
+              <button
+                onClick={() => window.open(gerarMensagemWhatsAppCompleta(), '_blank')}
+                className="w-full px-4 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 flex items-center justify-center"
               >
                 📱 Chamar no WhatsApp
-              </a>
+              </button>
             </div>
             
             <div className="space-y-4">
