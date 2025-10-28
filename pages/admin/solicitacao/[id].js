@@ -7,7 +7,6 @@ const DetalhesSolicitacao = () => {
   const { id } = router.query
   const [solicitacao, setSolicitacao] = useState(null)
   const [timeline, setTimeline] = useState([])
-  const [linkProposta, setLinkProposta] = useState('')
   const [loading, setLoading] = useState(true)
   const [isClient, setIsClient] = useState(false)
 
@@ -56,12 +55,6 @@ const DetalhesSolicitacao = () => {
       if (timelineData) {
         const timelineParsed = JSON.parse(timelineData)
         setTimeline(timelineParsed)
-        
-        // Verificar se há link de proposta na timeline
-        const eventoProposta = timelineParsed.find(e => e.tipo === 'proposta')
-        if (eventoProposta && eventoProposta.link) {
-          setLinkProposta(eventoProposta.link)
-        }
       } else {
         // Timeline inicial
         const timelineInicial = [
@@ -95,52 +88,33 @@ const DetalhesSolicitacao = () => {
     localStorage.setItem(`timeline_${solicitacao.id}`, JSON.stringify(novaTimeline))
   }
 
-  const gerarLinkProposta = (solicitacao, valor = 0) => {
-    const propostaId = `proposta_${Date.now()}`
-    const linkPropostaGerado = `${window.location.origin}/proposta/${propostaId}`
-    
-    const propostaData = {
-      id: propostaId,
-      data: new Date().toISOString(),
-      valor: valor,
-      solicitacao: {
-        nome: solicitacao.nome || 'Nome não informado',
-        celular: solicitacao.celular || 'Celular não informado',
-        origem: solicitacao.origem || 'Origem não informada',
-        destino: solicitacao.destino || 'Destino não informado',
-        tipoServico: solicitacao.tipoServico || 'Serviço não informado',
-        data: solicitacao.data || new Date().toISOString(),
-        observacoes: solicitacao.observacoes || ''
-      }
-    }
-    
-    localStorage.setItem(`proposta_${propostaId}`, JSON.stringify(propostaData))
-    
-    return { link: linkPropostaGerado, propostaData }
-  }
-
   const gerarMensagemWhatsAppCompleta = () => {
     if (!solicitacao) return ''
     
     const numero = solicitacao.celular.replace(/\D/g, '')
-    const mensagem = `Olá ${solicitacao.nome}! 
+    
+    // Construir mensagem detalhada
+    let mensagem = `Olá ${solicitacao.nome}! 
 
-Sua solicitação de frete foi analisada e já temos uma proposta personalizada para você:
+Recebemos sua solicitação de ${solicitacao.tipoServico} e gostaríamos de conversar sobre os detalhes do seu frete.
 
-📋 *Detalhes da Proposta:*
+📋 *DETALHES DO FRETE:*
 • *Cliente:* ${solicitacao.nome}
+• *Contato:* ${solicitacao.celular}
 • *Origem:* ${solicitacao.origem}
 • *Destino:* ${solicitacao.destino}
 • *Tipo:* ${solicitacao.tipoServico}
 ${solicitacao.tamanhoMudanca ? `• *Tamanho:* ${solicitacao.tamanhoMudanca}` : ''}
 ${solicitacao.tipoAjudantes ? `• *Ajudantes:* ${solicitacao.tipoAjudantes === 'empresa' ? `${solicitacao.quantidadeAjudantes} da empresa` : 'Próprios'}` : ''}
+${solicitacao.dataDesejada ? `• *Data desejada:* ${solicitacao.dataDesejada}` : ''}
 
-📄 *Acesse sua proposta completa aqui:*
-${linkProposta}
+${solicitacao.observacoes ? `📝 *Observações:*
+${solicitacao.observacoes}
+` : ''}Estamos prontos para te atender!
 
-⏰ *Esta proposta é válida por 7 dias.*
+*Para mais informações ou para fechar o orçamento, responda esta mensagem ou ligue para (62) 99110-3510*
 
-Para aceitar ou tirar dúvidas, entre em contato conosco!`
+_Equipe Pa-chego Fretes_`
 
     return `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`
   }
@@ -221,28 +195,6 @@ Para aceitar ou tirar dúvidas, entre em contato conosco!`
               <h2 className="text-2xl font-bold text-white">Detalhes da Solicitação</h2>
               <p className="text-blue-100">ID: #{solicitacao.id}</p>
             </div>
-          </div>
-          <div className="flex space-x-3">
-            <button
-              onClick={() => {
-                const { link } = gerarLinkProposta(solicitacao, 0)
-                navigator.clipboard.writeText(link)
-                adicionarEventoTimeline('proposta', 'Link Gerado', `Link da proposta gerado e copiado para área de transferência`)
-                setLinkProposta(link)
-                alert('Link gerado e copiado para a área de transferência!')
-              }}
-              className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white font-semibold rounded-lg transition-all duration-200"
-            >
-              🔗 Gerar Link
-            </button>
-            <a
-              href={`https://api.whatsapp.com/send?phone=${solicitacao.celular.replace(/\D/g, '')}&text=Olá ${solicitacao.nome}! Recebemos sua solicitação de cotação.`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition-all duration-200"
-            >
-              📱 WhatsApp
-            </a>
           </div>
         </div>
       </div>
@@ -330,6 +282,25 @@ Para aceitar ou tirar dúvidas, entre em contato conosco!`
           <div className="bg-white rounded-2xl shadow-lg p-6">
             <h3 className="text-xl font-bold text-gray-900 mb-4">📅 Timeline</h3>
             
+            {/* Botões de ação */}
+            <div className="space-y-3 mb-6">
+              <button
+                onClick={() => router.push('/admin')}
+                className="w-full px-4 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 flex items-center justify-center"
+              >
+                💰 Gerar Proposta
+              </button>
+              
+              <a
+                href={gerarMensagemWhatsAppCompleta()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full block px-4 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 flex items-center justify-center"
+              >
+                📱 Chamar no WhatsApp
+              </a>
+            </div>
+            
             <div className="space-y-4">
               {timeline.map((evento, index) => (
                 <div key={evento.id} className="relative">
@@ -360,44 +331,6 @@ Para aceitar ou tirar dúvidas, entre em contato conosco!`
                         })}
                       </p>
                       
-                      {/* Link da Proposta integrado na timeline */}
-                      {evento.tipo === 'proposta' && linkProposta && (
-                        <div className="mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
-                          <div className="flex items-center justify-between">
-                            <div className="flex-1 min-w-0">
-                              <p className="text-xs text-gray-500 mb-1">Link da proposta:</p>
-                              <p className="text-xs font-mono text-blue-600 truncate">{linkProposta}</p>
-                            </div>
-                            <div className="flex space-x-2 ml-3">
-                              <button
-                                onClick={() => navigator.clipboard.writeText(linkProposta)}
-                                className="p-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-all duration-200"
-                                title="Copiar link"
-                              >
-                                📋
-                              </button>
-                              <a
-                                href={linkProposta}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-200"
-                                title="Abrir link"
-                              >
-                                🔗
-                              </a>
-                              <a
-                                href={gerarMensagemWhatsAppCompleta()}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="p-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-all duration-200"
-                                title="Enviar WhatsApp"
-                              >
-                                📱
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                      )}
                     </div>
                   </div>
                 </div>

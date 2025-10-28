@@ -12,7 +12,6 @@ const AdminPage = () => {
   const [valorProposta, setValorProposta] = useState('')
   const [solicitacaoParaProposta, setSolicitacaoParaProposta] = useState(null)
   const [propostaGerada, setPropostaGerada] = useState(false)
-  const [linkProposta, setLinkProposta] = useState('')
   const [mostrarDetalhes, setMostrarDetalhes] = useState(false)
   const [timeline, setTimeline] = useState([])
   const [isClient, setIsClient] = useState(false)
@@ -227,14 +226,12 @@ const AdminPage = () => {
     setSolicitacaoParaProposta(solicitacao)
     setValorProposta('')
     setPropostaGerada(false)
-    setLinkProposta('')
     setMostrarModalProposta(true)
   }
 
-  const gerarLinkProposta = (solicitacao, valor = 0) => {
+  const gerarDadosProposta = (solicitacao, valor = 0) => {
     // Gerar ID único para a proposta
     const propostaId = `proposta_${Date.now()}`
-    const linkPropostaGerado = `${window.location.origin}/proposta/${propostaId}`
     
     // Criar dados da proposta com TODOS os campos
     const propostaData = {
@@ -262,27 +259,7 @@ const AdminPage = () => {
       }
     }
     
-    // Salvar no localStorage
-    localStorage.setItem(`proposta_${propostaId}`, JSON.stringify(propostaData))
-    
-    // Salvar o link na timeline da solicitação
-    const timelineData = localStorage.getItem(`timeline_${solicitacao.id}`)
-    const timeline = timelineData ? JSON.parse(timelineData) : []
-    
-    // Adicionar evento de proposta com o link
-    const eventoProposta = {
-      id: Date.now(),
-      tipo: 'proposta',
-      titulo: 'Link da Proposta Gerado',
-      descricao: `Link gerado: ${linkPropostaGerado}`,
-      link: linkPropostaGerado,
-      data: new Date().toISOString()
-    }
-    
-    timeline.push(eventoProposta)
-    localStorage.setItem(`timeline_${solicitacao.id}`, JSON.stringify(timeline))
-    
-    return { link: linkPropostaGerado, propostaData }
+    return { propostaData }
   }
 
   const gerarPDF = () => {
@@ -295,8 +272,8 @@ const AdminPage = () => {
       currency: 'BRL'
     })
 
-    // Gerar link da proposta
-    const { link: linkPropostaGerado, propostaData: propostaDataGerada } = gerarLinkProposta(solicitacaoParaProposta, parseFloat(valorProposta))
+    // Gerar dados da proposta
+    const { propostaData: propostaDataGerada } = gerarDadosProposta(solicitacaoParaProposta, parseFloat(valorProposta))
     const propostaId = propostaDataGerada.id
     
     // Atualizar proposta provisória se existir
@@ -745,8 +722,6 @@ const AdminPage = () => {
     link.click()
     document.body.removeChild(link)
     
-    // Salvar o link da proposta para envio via WhatsApp
-    setLinkProposta(linkPropostaGerado)
     setPropostaGerada(true)
     
     // Salvar proposta completa no localStorage com TODOS os campos
@@ -780,13 +755,12 @@ const AdminPage = () => {
     
     // Adicionar à timeline se estiver na tela de detalhes
     if (mostrarDetalhes && solicitacaoSelecionada) {
-      // Adicionar evento de proposta com o link
+      // Adicionar evento de proposta sem link
       const eventoProposta = {
         id: Date.now(),
         tipo: 'proposta',
         titulo: 'Proposta Gerada',
-        descricao: `Proposta de ${valorFormatado} criada e link gerado`,
-        link: linkPropostaGerado,
+        descricao: `Proposta de ${valorFormatado} criada`,
         data: new Date().toISOString(),
         status: 'concluido'
       }
@@ -808,33 +782,30 @@ const AdminPage = () => {
       currency: 'BRL'
     })
 
-    const mensagem = `*SEU ORCAMENTO FICOU PRONTO!*
+    const mensagem = `*SEU ORÇAMENTO FICOU PRONTO!*
 
-Ola ${solicitacaoParaProposta.nome}! 
+Olá ${solicitacaoParaProposta.nome}! 
 
-Sua solicitacao de frete foi analisada e ja temos uma proposta personalizada para voce:
+Sua solicitação de frete foi analisada e já temos uma proposta personalizada para você:
 
-*RESUMO DO SERVICO:*
+*RESUMO DO SERVIÇO:*
 • Origem: ${solicitacaoParaProposta.origem}
 • Destino: ${solicitacaoParaProposta.destino}
 • Tamanho: ${solicitacaoParaProposta.tamanhoMudanca}
-• Ajudantes: ${solicitacaoParaProposta.tipoAjudantes === 'empresa' ? `${solicitacaoParaProposta.quantidadeAjudantes} da empresa` : 'Proprios'}
+• Ajudantes: ${solicitacaoParaProposta.tipoAjudantes === 'empresa' ? `${solicitacaoParaProposta.quantidadeAjudantes} da empresa` : 'Próprios'}
 
 *VALOR DA PROPOSTA: ${valorFormatado}*
 
-*ACESSE SUA PROPOSTA COMPLETA:*
-${linkProposta}
-
-*O QUE ESTA INCLUIDO:*
-• Veiculo adequado para o tamanho da mudanca
-• ${solicitacaoParaProposta.tipoAjudantes === 'empresa' ? `${solicitacaoParaProposta.quantidadeAjudantes} ajudante(s) profissional(is)` : 'Suporte para seus ajudantes proprios'}
+*O QUE ESTÁ INCLUÍDO:*
+• Veículo adequado para o tamanho da mudança
+• ${solicitacaoParaProposta.tipoAjudantes === 'empresa' ? `${solicitacaoParaProposta.quantidadeAjudantes} ajudante(s) profissional(is)` : 'Suporte para seus ajudantes próprios'}
 • Atendimento personalizado
 
-*PARA CONFIRMAR OU ESCLARECER DUVIDAS:*
+*PARA CONFIRMAR OU ESCLARECER DÚVIDAS:*
 • WhatsApp: (62) 99110-3510
 • Email: contato@pachego.com.br
 
-Esta proposta e valida por 7 dias.
+Esta proposta é válida por 7 dias.
 
 Aguardamos seu retorno!
 
@@ -846,78 +817,25 @@ _Equipe Pa-chego Fretes_`
   const gerarMensagemWhatsAppCompleta = () => {
     if (!solicitacaoSelecionada?.nome) return ''
     
-    const valorFormatado = linkProposta ? parseFloat(valorProposta).toLocaleString('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }) : 'A ser definido'
+    const mensagem = `*SEU ORÇAMENTO FICOU PRONTO!*
 
-    const mensagem = `*SEU ORCAMENTO FICOU PRONTO!*
+Olá ${solicitacaoSelecionada.nome}! 
 
-Ola ${solicitacaoSelecionada.nome}! 
+Sua solicitação de frete foi analisada e já temos uma proposta personalizada para você:
 
-Sua solicitacao de frete foi analisada e ja temos uma proposta personalizada para voce:
-
-*RESUMO DO SERVICO:*
+*RESUMO DO SERVIÇO:*
 • Origem: ${solicitacaoSelecionada.origem}
 • Destino: ${solicitacaoSelecionada.destino}
 • Tipo: ${solicitacaoSelecionada.tipoServico}
 ${solicitacaoSelecionada.tamanhoMudanca ? `• Tamanho: ${solicitacaoSelecionada.tamanhoMudanca}` : ''}
-${solicitacaoSelecionada.tipoAjudantes ? `• Ajudantes: ${solicitacaoSelecionada.tipoAjudantes === 'empresa' ? `${solicitacaoSelecionada.quantidadeAjudantes} da empresa` : 'Proprios'}` : ''}
+${solicitacaoSelecionada.tipoAjudantes ? `• Ajudantes: ${solicitacaoSelecionada.tipoAjudantes === 'empresa' ? `${solicitacaoSelecionada.quantidadeAjudantes} da empresa` : 'Próprios'}` : ''}
 
-*VALOR DA PROPOSTA: ${valorFormatado}*
-
-${linkProposta ? `*ACESSE SUA PROPOSTA COMPLETA:*
-${linkProposta}
-
-` : ''}*DUVIDAS?* 
+*DÚVIDAS?* 
 Estamos aqui para ajudar! Responda esta mensagem ou ligue para (62) 99110-3510
 
 _Equipe Pa-chego Fretes_`
 
     return encodeURIComponent(mensagem)
-  }
-
-  const gerarMensagemWhatsAppProposta = (linkProposta) => {
-    if (!solicitacaoSelecionada?.nome) return ''
-    
-    const mensagem = `Ola! Sua proposta de frete esta pronta!
-    
-*DETALHES DA PROPOSTA:*
-• Cliente: ${solicitacaoSelecionada.nome || 'Nao informado'}
-• Origem: ${solicitacaoSelecionada.origem || 'Nao informado'}
-• Destino: ${solicitacaoSelecionada.destino || 'Nao informado'}
-• Servico: ${solicitacaoSelecionada.tipoServico || 'Nao informado'}
-
-*ACESSE SUA PROPOSTA COMPLETA:*
-${linkProposta}
-
-Esta proposta e valida por 7 dias.
-
-Para aceitar ou tirar duvidas, entre em contato conosco!
-
-_Equipe Pa-chego Fretes_`
-
-    return mensagem
-  }
-
-  const excluirProposta = (eventoId) => {
-    if (!confirm('Tem certeza que deseja excluir esta proposta? Esta ação não pode ser desfeita.')) {
-      return
-    }
-
-    // Remover da timeline
-    const novaTimeline = timeline.filter(evento => evento.id !== eventoId)
-    setTimeline(novaTimeline)
-    localStorage.setItem(`timeline_${solicitacaoSelecionada.id}`, JSON.stringify(novaTimeline))
-
-    // Encontrar e remover dados da proposta do localStorage
-    const evento = timeline.find(e => e.id === eventoId)
-    if (evento && evento.link) {
-      const propostaId = evento.link.split('/').pop()
-      localStorage.removeItem(`proposta_${propostaId}`)
-    }
-
-    alert('Proposta excluída com sucesso!')
   }
 
   const getStatusColor = (status) => {
@@ -1168,48 +1086,6 @@ _Equipe Pa-chego Fretes_`
                               >
                                 📄 Proposta
                               </button>
-                              {/* Botão Link - só aparece se já foi gerado */}
-                              {(() => {
-                                // Verificar se já existe link gerado na timeline
-                                const timelineData = localStorage.getItem(`timeline_${solicitacao.id}`)
-                                const temLink = timelineData ? JSON.parse(timelineData).some(e => e.tipo === 'proposta') : false
-                                
-                                return temLink ? (
-                                  <button
-                                    onClick={() => {
-                                      // Buscar o link existente na timeline
-                                      const timelineData = localStorage.getItem(`timeline_${solicitacao.id}`)
-                                      const timeline = timelineData ? JSON.parse(timelineData) : []
-                                      const eventoProposta = timeline.find(e => e.tipo === 'proposta')
-                                      
-                                      if (eventoProposta && eventoProposta.link) {
-                                        navigator.clipboard.writeText(eventoProposta.link)
-                                        alert('Link copiado para a área de transferência!')
-                                      }
-                                    }}
-                                    className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs font-semibold rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
-                                    title="Copiar link da proposta"
-                                  >
-                                    📋 Copiar
-                                  </button>
-                                ) : (
-                                  <button
-                                    onClick={() => {
-                                      const { link } = gerarLinkProposta(solicitacao, 0)
-                                      navigator.clipboard.writeText(link)
-                                      
-                                      alert('Link gerado e copiado para a área de transferência!')
-                                      
-                                      // Recarregar a página para atualizar o botão
-                                      window.location.reload()
-                                    }}
-                                    className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-purple-500 to-purple-600 text-white text-xs font-semibold rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
-                                    title="Gerar link da proposta"
-                                  >
-                                    🔗 Gerar
-                                  </button>
-                                )
-                              })()}
                               <select
                                 value={solicitacao.status}
                                 onChange={(e) => atualizarStatusSolicitacao(solicitacao.id, e.target.value)}
@@ -1415,6 +1291,25 @@ _Equipe Pa-chego Fretes_`
                       Timeline de Contato
                     </h3>
                     
+                    {/* Botões de ação */}
+                    <div className="space-y-3 mb-6">
+                      <button
+                        onClick={() => abrirModalProposta(solicitacaoSelecionada)}
+                        className="w-full px-4 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 flex items-center justify-center"
+                      >
+                        💰 Gerar Proposta
+                      </button>
+                      
+                      <a
+                        href={gerarMensagemWhatsAppCompleta()}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full block px-4 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 flex items-center justify-center"
+                      >
+                        📱 Chamar no WhatsApp
+                      </a>
+                    </div>
+                    
                     <div className="space-y-4">
                       {timeline.map((evento, index) => (
                         <div key={evento.id} className="relative">
@@ -1445,89 +1340,12 @@ _Equipe Pa-chego Fretes_`
                                 })}
                               </p>
                               
-                              {/* Link da Proposta integrado na timeline */}
-                              {evento.tipo === 'proposta' && evento.link && (
-                                <div className="mt-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                                  <div className="space-y-3">
-                                    {/* Link em linha separada */}
-                                    <div>
-                                      <p className="text-sm text-gray-600 mb-2">Link da proposta:</p>
-                                      <div className="bg-white p-3 rounded-lg border border-gray-300">
-                                        <p className="text-sm font-mono text-blue-600 break-all">{evento.link}</p>
-                                      </div>
-                                    </div>
-                                    
-                                    {/* Botões de ação */}
-                                    <div className="flex flex-wrap gap-2">
-                                      <button
-                                        onClick={() => navigator.clipboard.writeText(evento.link)}
-                                        className="px-3 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-all duration-200 text-sm flex items-center space-x-1"
-                                        title="Copiar link"
-                                      >
-                                        <span>📋</span>
-                                        <span>Copiar</span>
-                                      </button>
-                                      <a
-                                        href={evento.link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-200 text-sm flex items-center space-x-1"
-                                        title="Abrir link"
-                                      >
-                                        <span>🔗</span>
-                                        <span>Abrir</span>
-                                      </a>
-                                      <a
-                                        href={`https://api.whatsapp.com/send?phone=${solicitacaoSelecionada?.celular?.replace(/\D/g, '')}&text=${encodeURIComponent(gerarMensagemWhatsAppProposta(evento.link))}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-all duration-200 text-sm flex items-center space-x-1"
-                                        title="Enviar WhatsApp"
-                                      >
-                                        <span>📱</span>
-                                        <span>WhatsApp</span>
-                                      </a>
-                                      <button
-                                        onClick={() => window.open(evento.link, '_blank')}
-                                        className="px-3 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-lg transition-all duration-200 text-sm flex items-center space-x-1"
-                                        title="Imprimir PDF"
-                                      >
-                                        <span>🖨️</span>
-                                        <span>Imprimir</span>
-                                      </button>
-                                      <button
-                                        onClick={() => excluirProposta(evento.id)}
-                                        className="px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all duration-200 text-sm flex items-center space-x-1"
-                                        title="Excluir proposta"
-                                      >
-                                        <span>🗑️</span>
-                                        <span>Excluir</span>
-                                      </button>
-                                    </div>
-                                  </div>
-                                </div>
-                              )}
                             </div>
                           </div>
                         </div>
                       ))}
                     </div>
 
-                    {/* Botão para adicionar evento */}
-                    <div className="mt-6 pt-4 border-t border-gray-200">
-                      <button
-                        onClick={() => {
-                          const titulo = prompt('Título do evento:')
-                          const descricao = prompt('Descrição:')
-                          if (titulo && descricao) {
-                            adicionarEventoTimeline('contato', titulo, descricao)
-                          }
-                        }}
-                        className="w-full px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-all duration-200"
-                      >
-                        + Adicionar Evento
-                      </button>
-                    </div>
                   </div>
 
                 </div>

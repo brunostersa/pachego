@@ -185,10 +185,7 @@ const CalculadoraSimples = () => {
           }
         }
 
-        setResultado({
-          ...solicitacao,
-          linkProvisorio: `/proposta/${propostaProvisoria.id}`
-        })
+        setResultado(solicitacao)
         setMostrarTelaSucesso(true)
   }
 
@@ -313,46 +310,6 @@ const CalculadoraSimples = () => {
             Recebemos sua solicitação de cotação. Em breve entraremos em contato com o orçamento personalizado.
           </p>
           
-          {/* Link Provisório */}
-          {resultado?.linkProvisorio && (
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6 max-w-lg mx-auto">
-              <div className="flex items-center mb-2">
-                <span className="text-blue-600 mr-2">🔗</span>
-                <h3 className="font-semibold text-blue-800">Acompanhe sua cotação</h3>
-              </div>
-              <p className="text-sm text-blue-700 mb-3">
-                Você pode acompanhar o status da sua solicitação através do link abaixo:
-              </p>
-              <div className="bg-white p-3 rounded-lg border border-blue-300">
-                <p className="text-xs text-gray-600 mb-1">Link de acompanhamento:</p>
-                <p className="font-mono text-sm text-blue-600 break-all">
-                  {typeof window !== 'undefined' ? `${window.location.origin}${resultado.linkProvisorio}` : resultado.linkProvisorio}
-                </p>
-              </div>
-              <div className="mt-3 flex flex-col sm:flex-row gap-2">
-                <button
-                  onClick={() => {
-                    if (typeof window !== 'undefined') {
-                      navigator.clipboard.writeText(`${window.location.origin}${resultado.linkProvisorio}`)
-                      alert('Link copiado para a área de transferência!')
-                    }
-                  }}
-                  className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm flex items-center justify-center"
-                >
-                  📋 Copiar Link
-                </button>
-                <a
-                  href={resultado.linkProvisorio}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm flex items-center justify-center"
-                >
-                  👁️ Abrir Agora
-                </a>
-              </div>
-            </div>
-          )}
-          
           {/* Resumo da Solicitação */}
           <div className="bg-gray-50 rounded-xl p-6 mb-8 text-left max-w-lg mx-auto">
             <h3 className="font-semibold text-gray-900 mb-4 text-center">Resumo da sua solicitação</h3>
@@ -375,16 +332,46 @@ const CalculadoraSimples = () => {
             </div>
           </div>
           
-          {/* Botões de Ação */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <a
-              href="https://api.whatsapp.com/send?phone=62991103510&text=Estou%20fazendo%20um%20orçamento,%20pode%20me%20ajudar?"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-3 bg-green-600 text-white font-semibold rounded-xl hover:bg-green-700 transition-colors text-center text-sm sm:text-base"
-            >
-              💬 Falar no WhatsApp
-            </a>
+          {/* Botão Principal WhatsApp */}
+          <div className="flex justify-center mb-6">
+            {(() => {
+              const servicoNome = tiposServico.find(s => s.id === resultado?.tipoServico)?.nome || resultado?.tipoServico
+              let mensagem = `*Nova Solicitação de Cotação*\n\n`
+              mensagem += `*Serviço:* ${servicoNome}\n`
+              mensagem += `*Cliente:* ${resultado?.nome}\n`
+              mensagem += `*Contato:* ${resultado?.celular}\n`
+              mensagem += `*Origem:* ${resultado?.origem}\n`
+              mensagem += `*Destino:* ${resultado?.destino}\n`
+              
+              if (resultado?.tipoServico === 'mudanca') {
+                mensagem += `\n*Detalhes da Mudança:*\n`
+                mensagem += `Tamanho: ${resultado?.tamanhoMudanca}\n`
+                mensagem += `Ajudantes: ${resultado?.tipoAjudantes === 'empresa' ? `${resultado?.quantidadeAjudantes} da empresa` : 'próprios'}\n`
+              }
+              
+              mensagem += `*Data desejada:* ${resultado?.dataDesejada || 'Não informada'}\n`
+              
+              if (resultado?.observacao) {
+                mensagem += `\n*Observações:*\n${resultado?.observacao}\n`
+              }
+              
+              const urlWhatsApp = `https://api.whatsapp.com/send?phone=62991103510&text=${encodeURIComponent(mensagem)}`
+              
+              return (
+                <a
+                  href={urlWhatsApp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-8 py-3 bg-green-600 text-white font-semibold rounded-xl hover:bg-green-700 transition-colors text-center text-sm sm:text-base"
+                >
+                  💬 Enviar resumo por WhatsApp
+                </a>
+              )
+            })()}
+          </div>
+
+          {/* Botão Secundário */}
+          <div className="flex justify-center mb-8">
             <button 
               onClick={() => {
                 setMostrarTelaSucesso(false)
@@ -399,7 +386,7 @@ const CalculadoraSimples = () => {
                 setObservacao('')
                 setDataDesejada('')
               }}
-              className="px-8 py-3 bg-gray-500 text-white font-semibold rounded-xl hover:bg-gray-600 transition-colors text-sm sm:text-base"
+              className="text-gray-600 hover:text-gray-800 font-semibold transition-colors text-sm sm:text-base underline"
             >
               Nova Cotação
             </button>
