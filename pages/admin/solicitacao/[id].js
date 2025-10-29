@@ -91,8 +91,15 @@ const DetalhesSolicitacao = () => {
   const gerarMensagemWhatsAppCompleta = () => {
     if (!solicitacao) return ''
     
-    const numero = solicitacao.celular.replace(/\D/g, '')
+    const numero = solicitacao.celular ? solicitacao.celular.replace(/\D/g, '') : '62991103510'
     const urlAtual = `https://cotacao.pachego.com.br/proposta/${id}`
+    
+    console.log('🔍 Debug WhatsApp:', {
+      solicitacao: solicitacao,
+      celular: solicitacao.celular,
+      numero: numero,
+      urlAtual: urlAtual
+    })
     
     const mensagem = `*SEU ORÇAMENTO FICOU PRONTO!*
 
@@ -119,7 +126,10 @@ Estamos aqui para ajudar! Responda esta mensagem ou ligue para (62) 99110-3510
 
 _Equipe Pa-chego Fretes_`
 
-    return `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`
+    const linkCompleto = `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`
+    console.log('🔗 Link completo:', linkCompleto)
+    
+    return linkCompleto
   }
 
   const getStatusColor = (status) => {
@@ -295,7 +305,11 @@ _Equipe Pa-chego Fretes_`
               </button>
               
               <button
-                onClick={() => window.open(gerarMensagemWhatsAppCompleta(), '_blank')}
+                onClick={() => {
+                  const link = gerarMensagemWhatsAppCompleta()
+                  console.log('🔗 Abrindo WhatsApp:', link)
+                  window.location.href = link
+                }}
                 className="w-full px-4 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 flex items-center justify-center"
               >
                 📱 Chamar no WhatsApp

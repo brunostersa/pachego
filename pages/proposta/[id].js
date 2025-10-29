@@ -627,7 +627,11 @@ _Equipe Pa-chego Fretes_`
           <div className="px-4 py-4 bg-gray-50 border-t-2 border-gray-300 no-print">
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
-                onClick={() => window.open(gerarMensagemWhatsApp(), '_blank')}
+                onClick={() => {
+                  const link = gerarMensagemWhatsApp()
+                  console.log('🔗 Abrindo WhatsApp:', link)
+                  window.location.href = link
+                }}
                 className="inline-flex items-center justify-center px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm font-medium"
               >
                 <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
