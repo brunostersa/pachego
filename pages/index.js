@@ -2,27 +2,14 @@ import Header from '../components/Header'
 import Footer from '../components/Footer'
 import ImageCarousel from '../components/ImageCarousel'
 import Favicon from '../components/Favicon'
-
-import cidades from '../cidades-filtradas.json'
-import { normalizeText } from '../utils/normalize'
-import { galleryImages } from '../data/gallery'
+import Link from 'next/link'
 import Head from 'next/head'
 
-export default function Home() {
-  // Agrupar cidades por estado
-  const cidadesPorEstado = cidades.reduce((acc, cidade) => {
-    if (!acc[cidade.estado]) {
-      acc[cidade.estado] = [];
-    }
-    acc[cidade.estado].push(cidade);
-    return acc;
-  }, {});
+import { topCidadesPorPopulacao, getTopEstados } from '../data/cidades-population'
+import { normalizeText } from '../utils/normalize'
+import { galleryImages } from '../data/gallery'
 
-  // Definir principais cidades (primeiras 5 de cada estado)
-  const principaisCidades = Object.keys(cidadesPorEstado).reduce((acc, estado) => {
-    acc[estado] = cidadesPorEstado[estado].slice(0, 5);
-    return acc;
-  }, {});
+export default function Home({ topEstados, allCidades }) {
 
   return (
     <div>
@@ -53,30 +40,34 @@ export default function Home() {
       <Header />
       
       <main>
-        {/* Hero Section */}
+        {/* Hero Section - Estilo CIR */}
         <div className="bg-gradient-to-br from-blue-50 via-white to-green-50 py-20 px-6">
           <div className="max-w-6xl mx-auto text-center">
+            <p className="text-sm font-semibold text-blue-600 mb-3 uppercase tracking-wider">
+              ✨ Desde 1994 • Brasil Todo
+            </p>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-gray-900 leading-tight">
-              Pá-chego Fretes - <span className="text-blue-600">Fretes Rápidos e Mudanças</span> em Goiânia e Região
+              Fretes e Mudanças<br />
+              <em className="text-blue-600 font-normal">em {topEstados.length}0+ Cidades do Brasil</em>
             </h1>
             <p className="text-xl md:text-2xl text-gray-700 mb-12 max-w-4xl mx-auto leading-relaxed">
-              Serviços de fretes rápidos e mudanças em Goiânia, Trindade, Senador Canedo, 
-              Aparecida de Goiânia e região. +25 anos de experiência com equipe confiável.
+              Encontre os melhores profissionais de fretes e mudanças avaliados, com contato direto.
+              Cobertura nacional com qualidade garantida.
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <a 
-                href="/form" 
+              <a
+                href="/orcamento"
                 className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-10 rounded-xl transition duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 text-lg"
               >
-                📞 Solicite um orçamento
+                💰 Solicitar Orçamento
               </a>
-              <a 
-                href="https://api.whatsapp.com/send?phone=62991103510&text=Ol%C3%A1!%20vim%20pelo%20site%20gostaria%20de%20saber%20mais%20sobre%20os%20servi%C3%A7os!" 
-                target="_blank" 
+              <a
+                href="https://api.whatsapp.com/send?phone=62991103510&text=Ol%C3%A1!%20Gostaria%20de%20mais%20informa%C3%A7%C3%B5es!"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-10 rounded-xl transition duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 text-lg"
               >
-                💬 Falar conosco
+                💬 Falar no WhatsApp
               </a>
             </div>
           </div>
@@ -85,48 +76,43 @@ export default function Home() {
         {/* Conteúdo Principal */}
         <div className="max-w-6xl mx-auto p-6">
 
-        {/* Estados e Principais Cidades */}
+        {/* TOP ESTADOS - Estilo CIR Grid */}
         <div className="mb-16">
+          <p className="text-sm font-semibold text-blue-600 mb-3 uppercase tracking-wider text-center">
+            🎯 Cobertura Nacional
+          </p>
           <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">
-            Serviços de Frete por Estado
+            Os 10 Melhores Estados
           </h2>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {Object.keys(cidadesPorEstado).map((estado) => (
-              <div key={estado} className="bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
-                <div className="bg-blue-600 text-white p-4">
-                  <h3 className="text-xl font-bold">{estado}</h3>
-                  <p className="text-blue-100 text-sm">
-                    {cidadesPorEstado[estado].length} cidades atendidas
-                  </p>
-                </div>
-                
-                <div className="p-4">
-                  <h4 className="font-semibold text-gray-900 mb-3">Principais cidades:</h4>
-                  <div className="space-y-2">
-                    {principaisCidades[estado].map((cidade, index) => (
-                      <a 
-                        key={index}
-                        href={`/fretes/${estado.toLowerCase()}/${normalizeText(cidade.cidade)}`}
-                        className="block text-blue-600 hover:text-blue-800 hover:underline transition duration-200"
-                      >
-                        • Frete em {cidade.cidade}
-                      </a>
-                    ))}
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {topEstados.map((est) => (
+              <Link key={est.estado} href={`/fretes/estado/${est.estado.toLowerCase()}`} className="group block p-6 rounded-lg border-2 border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all hover:shadow-lg">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition">
+                      {est.estado}
+                    </h3>
+                    <p className="text-sm text-gray-600 mt-1">
+                      {est.cidadesAtendidas} cidades
+                    </p>
                   </div>
-                  
-                  {cidadesPorEstado[estado].length > 5 && (
-                    <div className="mt-4 pt-3 border-t border-gray-200">
-                      <a 
-                        href={`/fretes/estado/${estado.toLowerCase()}`}
-                        className="text-sm text-gray-600 hover:text-blue-600 hover:underline"
-                      >
-                        Ver todas as {cidadesPorEstado[estado].length} cidades de {estado} →
-                      </a>
-                    </div>
-                  )}
+                  <div className="text-2xl">📍</div>
                 </div>
-              </div>
+
+                <p className="text-xs text-gray-600 mb-3 font-semibold">TOP CIDADES:</p>
+                <div className="space-y-1 mb-4">
+                  {est.cidadesMaiorDemanda.map((cidade, i) => (
+                    <p key={i} className="text-sm text-gray-700">
+                      {i + 1}. {cidade}
+                    </p>
+                  ))}
+                </div>
+
+                <p className="text-sm text-blue-600 group-hover:text-blue-800 font-semibold transition">
+                  Ver tudo →
+                </p>
+              </Link>
             ))}
           </div>
         </div>
@@ -302,4 +288,16 @@ export default function Home() {
       <Footer />
     </div>
   )
+}
+export async function getStaticProps() {
+  const topEstados = getTopEstados()
+  const allCidades = Object.values(topCidadesPorPopulacao).flat()
+
+  return {
+    props: {
+      topEstados,
+      allCidades,
+    },
+    revalidate: 3600,
+  }
 }
