@@ -1,6 +1,7 @@
 # 🚀 Pachego Marketplace - LAUNCH STATUS
 
 **Status:** ✅ MVP LIVE & PRODUCTION READY  
+**Design:** 🎯 Minimalista Nubank (Confiável & Sóbrio)  
 **Date:** 2026-08-01  
 **Environment:** Vercel (Auto-deploying)
 
@@ -8,11 +9,22 @@
 
 ## 📊 What's Live
 
-### ✨ Complete Marketplace Platform
-- **Homepage** (`/`): Professional landing page with 10 top states
+### ✨ Complete Marketplace Platform (Minimalista Design)
+- **Homepage** (`/`): Clean Nubank-style landing with trust focus
 - **State Pages** (`/fretes/estado/[estado]`): Top 10 cities by population  
 - **City Pages** (`/fretes/cidade/[estado]/[cidade]`): Top 5 professionals ranked by rating
 - **Total Pages:** 237 dynamic pages generated automatically
+
+### 🎨 Design Philosophy
+**Minimalista Nubank Style** - Builds Trust & Confidence
+- ✅ Palette: White, gray, black (no gradients)
+- ✅ Cards: Simple borders, no effects
+- ✅ Typography: Bold/regular sans-serif
+- ✅ Buttons: Dark/white with clean styling
+- ✅ Spacing: Generous and organized
+- ✅ Animations: None (unnecessary complexity removed)
+- ✅ Emojis: Only in features, not main CTAs
+- ✅ Tone: Professional, trustworthy, fintech-like
 
 ### 📍 Data Coverage
 - **10 States:** SP, RJ, MG, RS, PR, GO, BA, PE, SC, CE
