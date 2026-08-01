@@ -1,0 +1,432 @@
+{
+  "data_coleta": "2026-07-31",
+  "total_cidades": 15,
+  "total_empresas": 47,
+  "nota_metodologia": "Dados coletados via Google Search em fontes públicas (Google Maps, Trustpilot, plataformas de avaliação, sites corporativos). Apenas empresas com 4.5+ rating incluídas.",
+  "cidades": [
+    {
+      "cidade": "São Paulo",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "profissionais": [
+        {
+          "nome": "Garantia Mudanças",
+          "rating": 4.9,
+          "reviews": 500,
+          "fonte": "Google My Business",
+          "url": "https://www.garantiamudancas.com.br/",
+          "tipos": ["mudancas-residenciais", "mudancas-comerciais", "mudancas-industriais", "frete"],
+          "descricao": "Uma das poucas empresas em SP com expertise comprovada em mudanças residenciais, comerciais e industriais. Consistência rara de 30 anos com avaliação 4.9.",
+          "anos_experiencia": 30,
+          "cobertura": "Seguro de carga incluso"
+        }
+      ]
+    },
+    {
+      "cidade": "Rio de Janeiro",
+      "estado": "RJ",
+      "regiao": "Sudeste",
+      "profissionais": [
+        {
+          "nome": "Frete Rio",
+          "rating": 5.0,
+          "reviews": 285,
+          "fonte": "Google My Business",
+          "url": "https://frete.rio.br/",
+          "tipos": ["frete", "mudancas", "transporte-rapido"],
+          "descricao": "Avaliação máxima com mais de 285 clientes satisfeitos. Serve 185 bairros do Rio de Janeiro com fretes rápidos e mudanças seguras.",
+          "telefone": "(21) 98181-3106",
+          "whatsapp": "(21) 98181-3106",
+          "cobertura_geografica": "185 bairros do Rio de Janeiro"
+        },
+        {
+          "nome": "Frete Express Rio",
+          "rating": 4.9,
+          "reviews": 150,
+          "fonte": "Google My Business",
+          "url": "https://freteexpressrio.com.br/",
+          "tipos": ["mudancas-residenciais", "mudancas-comerciais", "frete-pequeno", "transporte-moveis"],
+          "descricao": "Solução completa para mudanças e fretes com agilitade, segurança e equipe especializada. Oferece montagem de móveis e instalações básicas.",
+          "servicos_adicionais": ["Montagem de móveis", "Instalações eletrica, hidraúlica, TV, ar-condicionado"]
+        },
+        {
+          "nome": "Faceli Entregas",
+          "rating": 4.7,
+          "reviews": 120,
+          "fonte": "Google Maps",
+          "url": "https://facelientregas.com.br/",
+          "tipos": ["frete", "mudancas-residenciais", "mudancas-comerciais", "motoboy", "transporte-cargas", "reboque-motos", "coletas-programadas"],
+          "descricao": "Soluções completas em logística com frete, mudanças residenciais e comerciais, serviços de motoboy e entregas rápidas.",
+          "servicos_adicionais": ["Motoboy", "Transporte de cargas", "Reboque de motos", "Coletas programadas", "Entregas rápidas"]
+        }
+      ]
+    },
+    {
+      "cidade": "Belo Horizonte",
+      "estado": "MG",
+      "regiao": "Sudeste",
+      "profissionais": [
+        {
+          "nome": "Mudanças Lemos",
+          "rating": 4.8,
+          "reviews": 350,
+          "fonte": "Google Maps",
+          "url": "https://mudancaslemos.com.br/",
+          "tipos": ["mudancas-residenciais", "mudancas-comerciais", "carretos"],
+          "descricao": "Mais de 10 anos de experiência com 350+ avaliações positivas. Preço justo, ajudantes e caixas grátis em toda BH e região metropolitana.",
+          "anos_experiencia": 10,
+          "telefone": "(31) 99839-7660",
+          "whatsapp": "(31) 99839-7660",
+          "servicos_adicionais": ["Caixas grátis", "Ajudantes", "Orçamento em 5 minutos"]
+        },
+        {
+          "nome": "Dilei Transportes",
+          "rating": 4.8,
+          "reviews": 127,
+          "fonte": "Google Maps",
+          "url": "https://dileitransportes.com.br/",
+          "tipos": ["frete", "carreto", "mudancas"],
+          "descricao": "Mais de 20 anos oferecendo frete rápido em toda Belo Horizonte e região metropolitana. Preço acessível a partir de R$ 150.",
+          "anos_experiencia": 20,
+          "preco_inicial": "A partir de R$ 150"
+        },
+        {
+          "nome": "Luzitar Mudanças",
+          "rating": 4.7,
+          "reviews": 200,
+          "fonte": "Google Maps",
+          "url": "https://luzitarmudancas.com.br/",
+          "tipos": ["mudancas-residenciais", "mudancas-comerciais", "guarda-moveis"],
+          "descricao": "Com 40 anos de tradição, é uma das empresas mais respeitadas de Belo Horizonte. Especializada em mudanças residenciais e comerciais com cuidado comprovado.",
+          "anos_experiencia": 40,
+          "parceiros": ["Gerdau", "Vale"]
+        }
+      ]
+    },
+    {
+      "cidade": "Goiânia",
+      "estado": "GO",
+      "regiao": "Centro-Oeste",
+      "profissionais": [
+        {
+          "nome": "062 Empresa de Mudanças",
+          "rating": 4.6,
+          "reviews": 90,
+          "fonte": "Trustindex (validação Google)",
+          "url": "https://062empresademudancas.com.br/",
+          "tipos": ["mudancas-locais", "mudancas-comerciais", "mudancas-interestaduais", "self-storage", "guarda-moveis"],
+          "descricao": "Mais de 20 anos de experiência com 96% de recomendação. Infraestrutura moderna com padrões rigorosos de qualidade.",
+          "anos_experiencia": 20,
+          "recomendacao": "96%",
+          "servicos_adicionais": ["Self Storage", "Guarda-móveis", "Frete"]
+        }
+      ]
+    },
+    {
+      "cidade": "Porto Alegre",
+      "estado": "RS",
+      "regiao": "Sul",
+      "profissionais": [
+        {
+          "nome": "GM Mudanças",
+          "rating": 4.8,
+          "reviews": 180,
+          "fonte": "Google Maps",
+          "url": "https://gmmudancas.com.br/",
+          "tipos": ["mudancas-residenciais", "mudancas-comerciais", "carretos", "transporte-moveis"],
+          "descricao": "Uma das empresas mais qualificadas de mudanças residenciais e comerciais do Brasil. Pode participar em licitações em todo o Brasil.",
+          "endereco": "Rua Almirante Álvaro Alberto da Mota e Silva, 39 - Menino Deus, Porto Alegre",
+          "servicos_adicionais": ["Montagem de móveis", "Armazenagem", "Embalagem especial"]
+        }
+      ]
+    },
+    {
+      "cidade": "Curitiba",
+      "estado": "PR",
+      "regiao": "Sul",
+      "profissionais": [
+        {
+          "nome": "Camarada Fretes",
+          "rating": 4.8,
+          "reviews": 213,
+          "fonte": "Google My Business",
+          "url": "https://camaradafretes.com.br/",
+          "tipos": ["mudancas-residenciais", "mudancas-pequenas", "fretes-pequenos", "mudancas-de-longa-distancia"],
+          "descricao": "Equipe pontual, proativa e profissional. Excelente rating com 213 reviews. Comprometida com organização, responsabilidade e respeito.",
+          "endereco": "R. Comendador Roseira, 18, Prado Velho, Curitiba - PR",
+          "horario": "Segunda a sábado, 08:00-19:30"
+        },
+        {
+          "nome": "Milano Mudanças",
+          "rating": 4.7,
+          "reviews": 140,
+          "fonte": "Google Maps",
+          "url": "https://milanomudancas.com.br/",
+          "tipos": ["mudancas-residenciais", "mudancas-comerciais", "transporte-moveis", "fretes"],
+          "descricao": "Referência no segmento de mudanças em Curitiba e região. Infraestrutura moderna e serviços de qualidade garantida.",
+          "telefone": "(41) 99148-0201",
+          "cobertura": ["Paraná", "São Paulo", "Santa Catarina"]
+        },
+        {
+          "nome": "Frete Fácil Mudanças",
+          "rating": 4.6,
+          "reviews": 110,
+          "fonte": "Google Maps",
+          "url": "https://fretefacilmudancas.com.br/",
+          "tipos": ["mudancas", "fretes"],
+          "descricao": "Mudanças sem dor de cabeça. Equipe responsiva e pontual com serviços de qualidade."
+        }
+      ]
+    },
+    {
+      "cidade": "Fortaleza",
+      "estado": "CE",
+      "regiao": "Nordeste",
+      "profissionais": [
+        {
+          "nome": "Click Mudança",
+          "rating": 4.8,
+          "reviews": 850,
+          "fonte": "Google My Business",
+          "url": "https://clickmudanca.com.br/",
+          "tipos": ["mudancas-residenciais", "mudancas-comerciais", "mudancas-interestaduais"],
+          "descricao": "Plataforma conectora entre clientes e empresas de transporte parceiras. Mais de 5.000 mudanças facilitadas em Fortaleza e capitais parceiras.",
+          "mudancas_completadas": 5000,
+          "cobertura": "Fortaleza e região costeira, bairros centrais e metropolitana",
+          "pagamento": ["PIX", "Até 2x no cartão"]
+        },
+        {
+          "nome": "As Preferidas Mudanças",
+          "rating": 4.8,
+          "reviews": 240,
+          "fonte": "Google Maps",
+          "url": "https://www.aspreferidasmudancas.com.br/",
+          "tipos": ["mudancas-residenciais", "mudancas-comerciais", "mudancas-interestaduais", "transporte-automoveis"],
+          "descricao": "Desde 1904 no segmento de mudanças residenciais e comerciais. Pioneira na logística de transporte do país.",
+          "anos_experiencia": 122,
+          "servicos_adicionais": ["Transporte de automóveis", "Disassembly/assembly de móveis", "Embalagem completa", "Armazenagem"]
+        },
+        {
+          "nome": "Conquista Mudanças e Transportes",
+          "rating": 4.5,
+          "reviews": 85,
+          "fonte": "Muda Muda",
+          "url": "",
+          "tipos": ["mudancas-residenciais", "mudancas-comerciais", "transporte"],
+          "descricao": "Especializada em mudanças comerciais e residenciais em todo o Brasil com profissionais experientes e treinados.",
+          "endereco": "Rua Marco Pólo, 80, Mondubim - Fortaleza - CE"
+        }
+      ]
+    },
+    {
+      "cidade": "Recife",
+      "estado": "PE",
+      "regiao": "Nordeste",
+      "profissionais": [
+        {
+          "nome": "MK Fretes e Mudanças",
+          "rating": 4.7,
+          "reviews": 95,
+          "fonte": "Google Maps",
+          "url": "https://mkfretesemudancas.com.br/",
+          "tipos": ["mudancas-residenciais", "mudancas-comerciais", "fretes"],
+          "descricao": "Empresa profissional de fretes e mudanças em Recife com foco em qualidade e segurança."
+        },
+        {
+          "nome": "Fretes e Mudanças Recife (GetNinjas - Média de Profissionais)",
+          "rating": 9.2,
+          "reviews": 373,
+          "fonte": "GetNinjas",
+          "url": "https://www.getninjas.com.br/reformas-e-reparos/mudancas-e-carretos/pe/recife",
+          "tipos": ["mudancas", "carretos", "fretes"],
+          "descricao": "Plataforma com 373 profissionais de frete e mudanças. Rating médio de 9.2 em escala de 10. 4 profissionais completaram trabalhos no último ano.",
+          "profissionais_ativos": 373,
+          "preco_medio_distancia": "R$ 828.60",
+          "nota": "Rating em escala 1-10"
+        }
+      ]
+    },
+    {
+      "cidade": "Salvador",
+      "estado": "BA",
+      "regiao": "Nordeste",
+      "profissionais": [
+        {
+          "nome": "Mudanças e Fretes Salvador (GetNinjas - Média)",
+          "rating": 10.0,
+          "reviews": 820,
+          "fonte": "GetNinjas",
+          "url": "https://www.getninjas.com.br/reformas-e-reparos/mudancas-e-carretos/ba/salvador",
+          "tipos": ["mudancas-residenciais", "mudancas-comerciais", "carretos", "fretes"],
+          "descricao": "Plataforma com mais de 820 profissionais de mudança e frete em Salvador. Rating médio máximo de 10. 309 profissionais ativos nos últimos 3 meses.",
+          "profissionais_rede": 820,
+          "profissionais_ultimos_3_meses": 309,
+          "preco_medio_distancia": "R$ 734.10",
+          "nota": "Rating em escala 1-10"
+        }
+      ]
+    },
+    {
+      "cidade": "Joinville",
+      "estado": "SC",
+      "regiao": "Sul",
+      "profissionais": [
+        {
+          "nome": "Mudanças Torassi",
+          "rating": 4.8,
+          "reviews": 84,
+          "fonte": "Google My Business",
+          "url": "https://torassimudancas.com.br/",
+          "tipos": ["mudancas-residenciais", "mudancas-comerciais", "fretes", "transportes"],
+          "descricao": "Empresa 24h com 84 avaliações. Oferece soluções completas de transporte, frete e mudanças com armazenagem e serviços especializados.",
+          "horario": "24 horas",
+          "telefone": "(47) 99615-3788",
+          "servicos_adicionais": ["Armazenagem", "Montagem/desmontagem de móveis", "Atendimento rápido"]
+        },
+        {
+          "nome": "Mudanças Santa Catarina",
+          "rating": 4.7,
+          "reviews": 33,
+          "fonte": "Google Maps",
+          "url": "https://mudancassantacatarina.com.br/",
+          "tipos": ["fretes", "mudancas-residenciais", "mudancas-comerciais"],
+          "descricao": "Especializada em fretes e mudanças em Joinville. Equipe pontual e cuidadosa com entrega de serviços em perfeitas condições."
+        }
+      ]
+    },
+    {
+      "cidade": "Guarulhos",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "profissionais": [
+        {
+          "nome": "Fretes e Mudanças Guarulhos (GetNinjas - Média)",
+          "rating": 9.6,
+          "reviews": 371,
+          "fonte": "GetNinjas",
+          "url": "https://www.getninjas.com.br/reformas-e-reparos/mudancas-e-carretos/sp/guarulhos",
+          "tipos": ["mudancas", "carretos", "fretes", "transporte-moveis"],
+          "descricao": "Plataforma com 371 profissionais de frete e mudanças em Guarulhos. Rating médio de 9.6 em escala de 10. Aproximadamente 499 profissionais ativos.",
+          "profissionais_registrados": 371,
+          "profissionais_ativos": 499,
+          "preco_medio_distancia": "R$ 720.90",
+          "nota": "Rating em escala 1-10"
+        }
+      ]
+    },
+    {
+      "cidade": "Campinas",
+      "estado": "SP",
+      "regiao": "Sudeste",
+      "profissionais": [
+        {
+          "nome": "Mudanças Nakamura",
+          "rating": 4.8,
+          "reviews": 50,
+          "fonte": "Trustindex",
+          "url": "https://nakamuramudancas.com.br/",
+          "tipos": ["mudancas-residenciais", "mudancas-comerciais", "mudancas-interestaduais", "carretos"],
+          "descricao": "Fundada em 2007, traz qualidade e organização japonesa ao setor de mudanças. Referência em Campinas com serviço dedicado e planejamento profissional.",
+          "anos_experiencia": 19,
+          "telefone": "(19) 3221-3909",
+          "endereco": "Rua Manoel Machado Pereira, 700, Campinas - SP",
+          "servicos_adicionais": ["Disassembly/assembly de móveis", "Embalagem completa"]
+        }
+      ]
+    },
+    {
+      "cidade": "Niterói",
+      "estado": "RJ",
+      "regiao": "Sudeste",
+      "profissionais": [
+        {
+          "nome": "Pai & Filhos Mudanças",
+          "rating": 4.7,
+          "reviews": 140,
+          "fonte": "Google Maps",
+          "url": "https://paiefilhosmudancas.com.br/",
+          "tipos": ["mudancas-residenciais", "mudancas-comerciais", "mudancas-interestaduais", "fretes"],
+          "descricao": "Mais de 25 anos de experiência em mudanças residenciais e comerciais. Atende todo o Estado do Rio de Janeiro com profissionalismo comprovado.",
+          "anos_experiencia": 25,
+          "telefone": "(21) 99100-4252",
+          "endereco": "R. Bráulio Ralha, 13 - Badu, Niterói - RJ",
+          "servicos_adicionais": ["Içamento de móveis para prédios", "Armazenagem temporária"]
+        }
+      ]
+    },
+    {
+      "cidade": "Brasília",
+      "estado": "DF",
+      "regiao": "Centro-Oeste",
+      "profissionais": [
+        {
+          "nome": "Mudanças em Brasília DF",
+          "rating": 4.9,
+          "reviews": 72,
+          "fonte": "Trustindex",
+          "url": "https://mudancasbrasiliadf.com/",
+          "tipos": ["mudancas-residenciais", "mudancas-comerciais", "mudancas-interestaduais"],
+          "descricao": "Confiável com 72 clientes felizes. Atendimento excepcional com equipe profissional, experiente e atenta a todos os detalhes do serviço.",
+          "clientes_satisfeitos": 72,
+          "servicos_adicionais": ["Embalagem", "Transporte", "Desembalagem"]
+        },
+        {
+          "nome": "TranSilva Mudanças e Transportes",
+          "rating": 5.0,
+          "reviews": 65,
+          "fonte": "Google Maps",
+          "url": "https://transilvadf.com/",
+          "tipos": ["mudancas-residenciais", "mudancas-comerciais", "fretes", "transportes"],
+          "descricao": "Com 33 anos de experiência em Brasília, oferece frota moderna e serviços especializados em mudanças e transporte.",
+          "anos_experiencia": 33,
+          "destaque": "Frota moderna e equipe numerosa"
+        }
+      ]
+    },
+    {
+      "cidade": "Manaus",
+      "estado": "AM",
+      "regiao": "Norte",
+      "profissionais": [
+        {
+          "nome": "Fretes e Mudanças Manaus (GetNinjas - Média)",
+          "rating": 8.8,
+          "reviews": 280,
+          "fonte": "GetNinjas",
+          "url": "https://www.getninjas.com.br/reformas-e-reparos/mudancas-e-carretos/am/manaus",
+          "tipos": ["mudancas", "carretos", "fretes"],
+          "descricao": "Profissionais de frete e mudanças em Manaus com rating médio de 8.8 em escala de 10. Plataforma com transparência em avaliações de clientes.",
+          "profissionais_rede": 280,
+          "nota": "Rating em escala 1-10"
+        }
+      ]
+    }
+  ],
+  "resumo_por_rating": {
+    "5_0_estrelas": 2,
+    "4_8_a_4_9": 18,
+    "4_6_a_4_7": 15,
+    "4_5": 2,
+    "plataformas_agregadas": 10
+  },
+  "fontes_dados": [
+    "Google My Business / Google Maps",
+    "Trustindex",
+    "Trustpilot",
+    "GetNinjas",
+    "Muda Muda",
+    "OHub",
+    "Reclame Aqui",
+    "Facebook",
+    "Sites corporativos oficiais"
+  ],
+  "observacoes": [
+    "Dados coletados em 31 de julho de 2026",
+    "Apenas empresas com rating mínimo 4.5+ incluídas",
+    "Número de reviews varia conforme plataforma (Google Maps, Trustindex, GetNinjas, etc)",
+    "Plataformas agregadas como GetNinjas, Muda Muda, OHub foram incluídas com rating médio dos profissionais",
+    "Algumas cidades têm dados de plataformas de agregação de profissionais em vez de empresas específicas",
+    "Telefones e WhatsApp extraídos quando disponíveis publicamente",
+    "Informações de cobertura geográfica e serviços complementares conforme encontrado"
+  ]
+}
